@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Modules\PermissionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,7 +34,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return Inertia::render('Shop/Products');
     })->name('dashboard');
 
-    Route::get('/permissions', function () {
-        return Inertia::render('Permission/RolesAndPermissions');
-    })->name('dashboard');
+    // Route::get('/permissions', function () {
+    //     return Inertia::render('Permission/RolesAndPermissions');
+    // })->name('dashboard');
+
+    Route::resource('/permissions', PermissionController::class);
 });
