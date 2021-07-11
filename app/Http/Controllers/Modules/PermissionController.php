@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Modules;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
 class PermissionController extends Controller
@@ -13,9 +14,19 @@ class PermissionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $roles = Role::with('permissions:id,name')->get();
+
+        $alert = $request->session()->get('alert');
+
+        $roles = Role::latest()->paginate(1);
+
+        if ($alert) {
+            return inertia('Permission/RolesAndPermissions', [
+                'roles' => $roles,
+                'alert' => $alert
+            ]);
+        }
 
         return inertia('Permission/RolesAndPermissions', [
             'roles' => $roles,
@@ -29,7 +40,9 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Permission/FormRolesAndPermissions', [
+            'title' => 'Create'
+        ]);
     }
 
     /**
@@ -40,7 +53,18 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255', 'unique:roles'],
+        ])->validateWithBag('submitRole');
+
+        $role = Role::create(['guard_name' => 'web', 'name' => $request->name]);
+
+        // $role = Role::create(['name' => $request->name]);
+
+        return redirect('/permissions')->with('alert', [
+            'status' => 'success',
+            'message' => 'Role created successfully!'
+        ]);
     }
 
     /**

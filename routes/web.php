@@ -32,11 +32,15 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('/items', function () {
         return Inertia::render('Shop/Products');
-    })->name('dashboard');
+    })->name('items');
 
     // Route::get('/permissions', function () {
     //     return Inertia::render('Permission/RolesAndPermissions');
     // })->name('dashboard');
 
-    Route::resource('/permissions', PermissionController::class);
+    Route::post('/permissions/store', [PermissionController::class, 'store'])->name('permissions.store');
+
+    Route::resource('permissions', PermissionController::class);
+
+
 });

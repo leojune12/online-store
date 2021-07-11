@@ -21,7 +21,7 @@
                     tracking-wider
                   "
                 >
-                  Roles
+                  ID
                 </th>
                 <th
                   scope="col"
@@ -35,7 +35,7 @@
                     tracking-wider
                   "
                 >
-                  Permissions
+                  Role
                 </th>
                 <th
                   scope="col"
@@ -54,18 +54,15 @@
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="person in people" :key="person.email">
+              <tr v-for="role in roles.data" :key="role.id">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">{{ person.title }}</div>
-                  <div class="text-sm text-gray-500">
-                    {{ person.department }}
-                  </div>
+                  <div class="text-sm text-gray-900">{{ role.id }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">{{ person.title }}</div>
-                  <div class="text-sm text-gray-500">
-                    {{ person.department }}
-                  </div>
+                  <div class="text-sm text-gray-900">{{ role.name }}</div>
+                  <!-- <div v-for="permission in role.permissions" :key="permission.id" class="text-sm text-gray-500">
+                    {{ role.name }}
+                  </div> -->
                 </td>
                 <td
                   class="
@@ -96,28 +93,12 @@
 </template>
 
 <script>
-const people = [
-  {
-    name: "Jane Cooper",
-    title: "Regional Paradigm Technician",
-    department: "Optimization",
-    role: "Admin",
-    email: "jane.cooper@example.com",
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-  },
-  // More people...
-];
 
 export default {
+
   props: {
-    roles: Array,
+    roles: Object,
   },
 
-  setup() {
-    return {
-      people,
-    };
-  },
 };
 </script>
