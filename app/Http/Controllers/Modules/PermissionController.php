@@ -16,20 +16,13 @@ class PermissionController extends Controller
      */
     public function index(Request $request)
     {
-
         $alert = $request->session()->get('alert');
 
-        $roles = Role::latest()->paginate(1);
-
-        if ($alert) {
-            return inertia('Permission/RolesAndPermissions', [
-                'roles' => $roles,
-                'alert' => $alert
-            ]);
-        }
+        $roles = Role::orderBy('id', 'DESC')->paginate(1);
 
         return inertia('Permission/RolesAndPermissions', [
             'roles' => $roles,
+            'alert' => $alert
         ]);
     }
 
@@ -86,7 +79,12 @@ class PermissionController extends Controller
      */
     public function edit($id)
     {
-        //
+        $role = Role::find($id);
+
+        return inertia('Permission/FormRolesAndPermissions', [
+            'title' => 'Update',
+            'role' => $role['name'] ? $role['name'] : ""
+        ]);
     }
 
     /**

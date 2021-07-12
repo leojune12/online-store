@@ -86,7 +86,7 @@ export default {
         return {
             name: this.role,
             form: this.$inertia.form({
-                name: this.name
+                name: this.getName,
             }),
         }
     },
@@ -98,6 +98,12 @@ export default {
                 preserveScroll: true,
             })
         },
+    },
+
+    computed: {
+        getName() {
+            return this.name
+        }
     }
 }
 </script>

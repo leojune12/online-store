@@ -2,10 +2,27 @@
 <template>
     <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
         <div class="flex-1 flex justify-between sm:hidden">
-            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <a :href="getLink(pagination.prev_page_url)" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                 Previous
             </a>
-            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <div class="flex items-center">
+                <p class="text-sm text-gray-700">
+                    Showing
+                    {{ ' ' }}
+                    <span class="font-medium">{{ pagination.from }}</span>
+                    {{ ' ' }}
+                    to
+                    {{ ' ' }}
+                    <span class="font-medium">{{ pagination.to }}</span>
+                    {{ ' ' }}
+                    of
+                    {{ ' ' }}
+                    <span class="font-medium">{{ pagination.total }}</span>
+                    {{ ' ' }}
+                    results
+                </p>
+            </div>
+            <a :href="getLink(pagination.next_page_url)" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                 Next
             </a>
         </div>
@@ -32,9 +49,7 @@
                     <!-- <a v-for="link in pagination.links" :key="link.url" :href="link.url" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
                         {{ link.label }}
                     </a> -->
-                    <inertia-link v-for="link in pagination.links" :key="link.label" :href="getLink(link)" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium" :class="{ 'bg-gray-200' : link.active}">
-                        {{ decodeURI(link.label) }}
-                    </inertia-link>
+                    <inertia-link v-for="link in pagination.links" :key="link.label" :href="getLink(link.url)" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium" :class="{ 'bg-gray-200' : link.active, 'link-disabled' : !link.url }" v-html="link.label" />
                     <!-- <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                     <span class="sr-only">Previous</span>
                     <svg style="width:24px;height:24px" viewBox="0 0 24 24">
@@ -88,8 +103,18 @@ export default {
 
     methods: {
         getLink (link) {
-            return link.url ? link.url : '#'
+            return link ? link : '#'
         },
-    }
+    },
 }
 </script>
+
+<style scoped>
+
+.link-disabled {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+}
+
+</style>

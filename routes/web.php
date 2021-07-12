@@ -38,9 +38,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     //     return Inertia::render('Permission/RolesAndPermissions');
     // })->name('dashboard');
 
-    Route::post('/permissions/store', [PermissionController::class, 'store'])->name('permissions.store');
+    // Route::post('/permissions/store', [PermissionController::class, 'store'])->name('permissions.store');
 
     Route::resource('permissions', PermissionController::class);
-
-
 });

@@ -16,7 +16,7 @@
                         {{ alert.message }}
                     </span>
                 </div>
-                <div class="flex justify-between items-center mb-6">
+                <div class="flex justify-between items-center mb-6 sm:ml-0 ml-3">
                     <inertia-link href="/permissions/create" class="rounded bg-emerald-500 text-white px-3 py-1 hover:bg-emerald-600 flex items-center">
                         Add Role
                     </inertia-link>
@@ -24,7 +24,7 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <roles-table :roles="roles" />
 
-                    <pagination :pagination="roles" />
+                    <!-- <pagination :pagination="roles" /> -->
                 </div>
             </div>
         </div>
@@ -35,13 +35,13 @@
 
 import AppLayout from "@/Layouts/AppLayout";
 import RolesTable from "@/Pages/Permission/components/Table";
-import Pagination from "@/Components/Pagination"
+// import Pagination from "@/Components/Pagination"
 
 export default {
   components: {
     AppLayout,
     RolesTable,
-    Pagination,
+    // Pagination,
   },
 
   props: {
