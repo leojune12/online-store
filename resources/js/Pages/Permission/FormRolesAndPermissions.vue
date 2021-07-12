@@ -77,34 +77,44 @@ export default {
             default: "Create"
         },
         role: {
-            type: String,
-            default: null
+            type: Object,
+            default: {
+                id: null,
+                name: null
+            }
         }
     },
 
     data () {
         return {
-            name: this.role,
             form: this.$inertia.form({
-                name: this.getName,
+                name: this.role.name,
             }),
         }
     },
 
     methods: {
         submitRole () {
-            this.form.post(route('permissions.store'), {
-                errorBag: 'submitRole',
-                preserveScroll: true,
-            })
+
+            if (this.title == 'Create') {
+
+                this.form.post(route('permissions.store'), {
+                    errorBag: 'submitRole',
+                    preserveScroll: true,
+                })
+            } else {
+
+                this.form['_method'] = 'PUT'
+
+                console.log(this.form)
+
+                this.form.post(route('permissions.update', this.role.id), {
+                    errorBag: 'submitRole',
+                    preserveScroll: true,
+                })
+            }
         },
     },
-
-    computed: {
-        getName() {
-            return this.name
-        }
-    }
 }
 </script>
 

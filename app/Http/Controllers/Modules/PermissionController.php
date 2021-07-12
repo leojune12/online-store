@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Modules;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class PermissionController extends Controller
@@ -34,7 +36,7 @@ class PermissionController extends Controller
     public function create()
     {
         return inertia('Permission/FormRolesAndPermissions', [
-            'title' => 'Create'
+            'title' => 'Create',
         ]);
     }
 
@@ -83,7 +85,7 @@ class PermissionController extends Controller
 
         return inertia('Permission/FormRolesAndPermissions', [
             'title' => 'Update',
-            'role' => $role['name'] ? $role['name'] : ""
+            'role' => $role
         ]);
     }
 
@@ -94,9 +96,17 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Permission $permission)
     {
-        //
+        dd($permission);
+
+        Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255', Rule::unique('roles')->ignore($permission->id)],
+        ])->validateWithBag('submitRole');
+
+        $permission->update([
+            'name' => $request->name
+        ]);
     }
 
     /**

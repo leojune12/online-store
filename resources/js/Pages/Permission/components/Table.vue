@@ -78,7 +78,7 @@
                                     <a href="#" class="text-green-600 hover:text-green-900"
                                       >View</a
                                     >
-                                    <a :href="roles.path + '/edit'" class="text-indigo-600 hover:text-indigo-900"
+                                    <a :href="roles.path + '/' + role.id + '/edit'" class="text-indigo-600 hover:text-indigo-900"
                                       >Update</a
                                     >
                                     <a href="#" class="text-red-600 hover:text-red-900">Delete</a>
