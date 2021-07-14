@@ -20,7 +20,7 @@ class PermissionController extends Controller
     {
         $alert = $request->session()->get('alert');
 
-        $roles = Role::orderBy('id', 'DESC')->paginate(1);
+        $roles = Role::orderBy('id', 'DESC')->paginate(10);
 
         return inertia('Permission/RolesAndPermissions', [
             'roles' => $roles,
@@ -96,16 +96,21 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Permission $permission)
+    public function update(Request $request, $id)
     {
-        dd($permission);
-
         Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255', Rule::unique('roles')->ignore($permission->id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('roles')->ignore($id)],
         ])->validateWithBag('submitRole');
 
-        $permission->update([
+        $role = Role::find($id);
+
+        $role->update([
             'name' => $request->name
+        ]);
+
+        return redirect('/permissions')->with('alert', [
+            'status' => 'success',
+            'message' => 'Role updated successfully!'
         ]);
     }
 
@@ -117,6 +122,13 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $role = Role::find($id);
+
+        $role->delete();
+
+        return redirect('/permissions')->with('alert', [
+            'status' => 'success',
+            'message' => 'Role deleted successfully!'
+        ]);
     }
 }
