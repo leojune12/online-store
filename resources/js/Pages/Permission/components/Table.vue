@@ -38,13 +38,19 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             <tr v-for="role in roles.data" :key="role.id">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ role.id }}</div>
+                                    <div class="text-sm text-gray-900">
+                                        {{ role.id }}
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ role.name }}</div>
+                                    <div class="text-sm text-gray-900">
+                                        {{ role.name }}
+                                    </div>
                                 </td>
 								<td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900"></div>
+                                    <div class="text-sm text-gray-900">
+                                        
+                                    </div>
                                 </td>
                                 <td
                                     class="px-6 py-4 whitespace-nowrap text-sm font-medium flex flex-1 gap-x-3"
@@ -103,43 +109,43 @@ import JetSecondaryButton from '@/Jetstream/SecondaryButton'
 export default {
 
     components: {
-      Pagination,
-      JetDialogModal,
-      JetDangerButton,
-      JetSecondaryButton
+        Pagination,
+        JetDialogModal,
+        JetDangerButton,
+        JetSecondaryButton
     },
 
     props: {
-      roles: Object,
+        roles: Object,
     },
 
     data() {
-    return {
-      confirmingRoleDeletion: false,
+        return {
+            confirmingRoleDeletion: false,
 
-      form: this.$inertia.form({
-        role_id: null,
-      })
-    };
-  },
-
-  methods: {
-    confirmRoleDeletion(id) {
-        this.confirmingRoleDeletion = true;
-        this.form.role_id = id
+            form: this.$inertia.form({
+                role_id: null,
+            })
+        }
     },
 
-    deleteRole() {
-        this.form.delete(route('permissions.destroy', this.form.role_id), {
-            preserveScroll: true,
-            onSuccess: () => this.closeModal(),
-        })
-    },
+    methods: {
+        confirmRoleDeletion(id) {
+            this.confirmingRoleDeletion = true;
+            this.form.role_id = id
+        },
 
-    closeModal() {
-        this.confirmingRoleDeletion = false
+        deleteRole() {
+            this.form.delete(route('permissions.destroy', this.form.role_id), {
+                preserveScroll: true,
+                onSuccess: () => this.closeModal(),
+            })
+        },
+
+        closeModal() {
+            this.confirmingRoleDeletion = false
+        },
     },
-  },
 
 };
 </script>
