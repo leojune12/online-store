@@ -16,25 +16,25 @@ class UserSeeder extends Seeder
     public function run()
     {
         $superadmin_user_id = DB::table('users')->insertGetId([
-            'name' => 'superadmin',
+            'name' => 'Superadmin',
             'email' => 'jfljfb@gmail.com',
             'password' => bcrypt('pw@12345'),
         ]);
 
         $admin_user_id = DB::table('users')->insertGetId([
-            'name' => 'admin',
+            'name' => 'Admin',
             'email' => 'leojunebedeo@gmail.com',
             'password' => bcrypt('pw@12345'),
         ]);
 
         $superadmin_user = User::find($superadmin_user_id);
-        $superadmin_user->assignRole('superadmin');
+        $superadmin_user->assignRole('Superadmin');
 
         $admin_user = User::find($admin_user_id);
-        $admin_user->assignRole('admin');
+        $admin_user->assignRole('Admin');
 
         User::factory(100)->create()->each(function ($user) {
-            $user->assignRole('user');
+            $user->assignRole('User');
         });
     }
 }
