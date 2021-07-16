@@ -30,5 +30,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::resource('permissions', PermissionController::class);
 
         Route::resource('users', UserController::class);
+
+        Route::post('users/{id}/disable', [UserController::class, 'disable'])->name('users.disable');
     });
 });
