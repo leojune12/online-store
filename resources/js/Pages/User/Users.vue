@@ -1,7 +1,7 @@
 <template>
 	<app-layout>
 		<template #header>
-			<h2 class="font-semibold text-xl text-gray-800 leading-tight">Roles</h2>
+			<h2 class="font-semibold text-xl text-gray-800 leading-tight">Users</h2>
 		</template>
 
 		<div class="py-10">
@@ -10,14 +10,6 @@
 					v-if="!!alert"
 					:alert="alert"
 				/>
-				<!-- <div class="flex justify-between items-center mb-3 sm:ml-0 ml-3">
-					<inertia-link
-						href="/permissions/create"
-						class="rounded bg-emerald-500 text-white px-3 py-1 hover:bg-emerald-600 flex items-center"
-					>
-						Add Role
-					</inertia-link>
-				</div> -->
 				<div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
 					<data-table :users="users" />
 				</div>
