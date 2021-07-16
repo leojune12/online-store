@@ -126,7 +126,7 @@ class PermissionController extends Controller
 
         $role->delete();
 
-        return redirect('/permissions')->with('alert', [
+        return back()->with('alert', [
             'status' => 'success',
             'message' => 'Role deleted successfully!'
         ]);
