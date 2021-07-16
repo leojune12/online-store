@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Modules;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -89,5 +91,39 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function disable(Request $request, $id)
+    {
+
+        Validator::make($request->all(), [
+            'status' => [
+                'required',
+                'boolean',
+            ]
+        ])->validateWithBag('disableUser');
+
+        if (!$user = User::find($id)) {
+            return back()->with('alert', [
+                'status' => 'error',
+                'message' => 'Whoops! Something went wrong. Please try again.',
+            ]);
+        }
+
+        DB::transaction(function () use ($request, $user) {
+
+            $status = $user->update([
+                'status' => $request->status,
+            ]);
+
+            dd($status);
+        });
+
+        $method = $request->status ? 'enabled' : 'disabled';
+
+        return back()->with('alert', [
+            'status' => 'success',
+            'message' => 'User ' . $method . ' successfully!'
+        ]);
     }
 }
