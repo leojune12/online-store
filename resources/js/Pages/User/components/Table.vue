@@ -54,13 +54,13 @@
                                     </div>
                                 </td>
 								<td class="px-6 py-4 whitespace-nowrap">
-                                    <span v-for="role in user.roles" :key="role.id" class="text-sm text-white rounded-full py-1 px-3 bg-blue-500">
+                                    <span v-for="role in user.roles" :key="role.id" class="text-sm text-white rounded-full py-1 px-3" :class="getRoleBgColor(role.name)">
                                         {{ role.name }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="text-sm text-white rounded-full py-1 px-3" :class="[ user.status ? 'bg-green-500' : 'bg-red-500' ]">
-                                        {{ getStatus(user.status) }}
+                                    <span class="text-sm text-white rounded-full py-1 px-3" :class="getStatus(user.status).bgColor">
+                                        {{ getStatus(user.status).text }}
                                     </span>
                                 </td>
                                 <td
@@ -72,7 +72,7 @@
                                     <inertia-link :href="users.path + '/' + user.id + '/edit'" class="text-indigo-600 hover:text-indigo-900">
                                         Update
                                     </inertia-link>
-                                    <a href="#" class="text-red-600 hover:text-red-900" @click="confirmUserDeletion(user.id)">
+                                    <a href="#" class="text-red-600 hover:text-red-900" @click="confirmUserDisablement(user.id, user.status)">
                                         Disable
                                     </a>
                                 </td>
@@ -84,9 +84,9 @@
             </div>
         </div>
 
-        <!-- Delete Account Confirmation Modal -->
-        <jet-dialog-modal :show="confirmingUserDeletion" @close="closeModal">
-          <template #title> Delete User </template>
+        <!-- Disable Account Confirmation Modal -->
+        <jet-dialog-modal :show="confirmingUserDisablement" @close="closeModal">
+          <template #title> Disable User </template>
 
           <template #content>
             Are you sure?
@@ -99,11 +99,11 @@
 
             <jet-danger-button
               class="ml-2"
-              @click="deleteUser"
+              @click="disableUser"
               :class="{ 'opacity-25': form.processing }"
               :disabled="form.processing"
             >
-              Delete
+              Disable
             </jet-danger-button>
           </template>
         </jet-dialog-modal>
@@ -132,38 +132,58 @@ export default {
 
     data() {
         return {
-            confirmingUserDeletion: false,
+            confirmingUserDisablement: false,
 
             form: this.$inertia.form({
                 user_id: null,
+                status: null,
             })
         }
     },
 
     methods: {
-        confirmUserDeletion (id) {
-            this.confirmingUserDeletion = true;
+        confirmUserDisablement (id, status) {
+            this.confirmingUserDisablement = true;
             this.form.user_id = id
+            this.form.status = !status
         },
 
-        deleteUser () {
-            this.form.delete(route('permissions.destroy', this.form.user_id), {
+        disableUser () {
+            this.form.post(route('users.disable', this.form.user_id), {
                 preserveScroll: true,
                 onSuccess: () => this.closeModal(),
             })
         },
 
         closeModal () {
-            this.confirmingUserDeletion = false
+            this.confirmingUserDisablement = false
         },
 
         getStatus (status) {
             if (status) {
-                return "Active"
+                return {
+                    text: "Active",
+                    bgColor: "bg-green-500"
+                }
             } else {
-                return "Inactive"
+                return {
+                    text: "Inactive",
+                    bgColor: "bg-red-500"
+                }
             }
-        }
+        },
+
+        getRoleBgColor (role) {
+            if (role == 'Superadmin') {
+                return 'bg-purple-500'
+            } else if (role == 'Admin') {
+                return 'bg-yellow-500'
+            } else if (role == 'User') {
+                return 'bg-blue-500'
+            } else {
+                return 'bg-gray-500'
+            }
+        },
     },
 
 };
