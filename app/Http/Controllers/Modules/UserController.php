@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class UserController extends Controller
 {
@@ -103,21 +104,26 @@ class UserController extends Controller
             ]
         ])->validateWithBag('disableUser');
 
-        if (!$user = User::find($id)) {
+        DB::beginTransaction();
+
+        try {
+
+            $user = User::find($id);
+
+            $user->update([
+                'status' => $request->status,
+            ]);
+
+            DB::commit();
+        } catch (Throwable $e) {
+
+            DB::rollBack();
+
             return back()->with('alert', [
                 'status' => 'error',
                 'message' => 'Whoops! Something went wrong. Please try again.',
             ]);
         }
-
-        DB::transaction(function () use ($request, $user) {
-
-            $status = $user->update([
-                'status' => $request->status,
-            ]);
-
-            dd($status);
-        });
 
         $method = $request->status ? 'enabled' : 'disabled';
 
