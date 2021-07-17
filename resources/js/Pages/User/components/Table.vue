@@ -72,8 +72,8 @@
                                     <inertia-link :href="users.path + '/' + user.id + '/edit'" class="text-indigo-600 hover:text-indigo-900">
                                         Update
                                     </inertia-link>
-                                    <a href="#" class="text-red-600 hover:text-red-900" @click="confirmUserDisablement(user.id, user.status)">
-                                        Disable
+                                    <a href="#" :class="getAction(user.status).textColor" @click="confirmUserDisablement(user.id, user.status)">
+                                        {{ getAction(user.status).text }}
                                     </a>
                                 </td>
                             </tr>
@@ -86,7 +86,7 @@
 
         <!-- Disable Account Confirmation Modal -->
         <jet-dialog-modal :show="confirmingUserDisablement" @close="closeModal">
-          <template #title> Disable User </template>
+          <template #title> {{ getModalAction.text }} User </template>
 
           <template #content>
             Are you sure?
@@ -97,14 +97,14 @@
               Cancel
             </jet-secondary-button>
 
-            <jet-danger-button
-              class="ml-2"
-              @click="disableUser"
-              :class="{ 'opacity-25': form.processing }"
-              :disabled="form.processing"
+            <button
+                class="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest focus:outline-none focus:ring disabled:opacity-25 transition ml-2"
+                :class="[ form.processing ? 'opacity-25' : '', getModalAction.bgColor ]"
+                :disabled="form.processing"
+                @click="disableUser"
             >
-              Disable
-            </jet-danger-button>
+                {{ getModalAction.text }}
+            </button>
           </template>
         </jet-dialog-modal>
     </div>
@@ -184,7 +184,28 @@ export default {
                 return 'bg-gray-500'
             }
         },
+
+        getAction (status) {
+            if (status) {
+                return {
+                    text: 'Disable',
+                    textColor: 'text-red-600 hover:text-red-900',
+                    bgColor: 'bg-red-600 hover:bg-red-500 focus:border-red-700 focus:ring-red-200 active:bg-red-600'
+                }
+            } else {
+                return {
+                    text: 'Enable',
+                    textColor: 'text-green-600 hover:text-green-900',
+                    bgColor: 'bg-green-600 hover:bg-green-500 focus:border-green-700 focus:ring-green-200 active:bg-green-600'
+                }
+            }
+        }
     },
 
+    computed: {
+        getModalAction () {
+            return this.getAction(!this.form.status)
+        }
+    }
 };
 </script>
