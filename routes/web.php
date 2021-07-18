@@ -3,6 +3,7 @@
 use App\Http\Controllers\Modules\PermissionController;
 use App\Http\Controllers\Modules\UserController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -15,7 +16,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['user_is_active', 'auth:sanctum', 'verified'])->group(function () {
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
@@ -33,4 +34,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::post('users/{id}/disable', [UserController::class, 'disable'])->name('users.disable');
     });
+});
+
+Route::get('/logout-user', function () {
+    Auth::logout();
+
+    return redirect('/');
 });
