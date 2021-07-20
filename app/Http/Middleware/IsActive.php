@@ -2,12 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\UserService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class EnsureUserIsActive
+class IsActive
 {
     /**
      * Handle an incoming request.
@@ -18,20 +17,17 @@ class EnsureUserIsActive
      */
     public function handle(Request $request, Closure $next)
     {
-        // UserService::userIsActive();
-
         if (Auth::user()->status == 0) {
 
             // Auth::logout();
-            auth('web')->logout();
-            // auth('api')->logout();
 
-            return redirect('/login')->with('errors', [
-                'Your account has been disabled.'
-            ]);
-        } else {
+            $request->session()->invalidate();
 
-            return $next($request);
+            $request->session()->regenerateToken();
+
+            abort(403, "Your account has been disabled.");
         }
+
+        return $next($request);
     }
 }

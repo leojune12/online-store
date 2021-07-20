@@ -16,7 +16,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['user_is_active', 'auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['is_active', 'auth:sanctum', 'verified'])->group(function () {
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
