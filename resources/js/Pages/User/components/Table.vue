@@ -59,8 +59,8 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="text-sm text-white rounded-full py-1 px-3" :class="getStatus(user.status).bgColor">
-                                        {{ getStatus(user.status).text }}
+                                    <span class="text-sm text-white rounded-full py-1 px-3" :class="getStatus(user.is_active).bgColor">
+                                        {{ getStatus(user.is_active).text }}
                                     </span>
                                 </td>
                                 <td
@@ -72,8 +72,8 @@
                                     <inertia-link :href="users.path + '/' + user.id + '/edit'" class="text-indigo-600 hover:text-indigo-900">
                                         Update
                                     </inertia-link>
-                                    <a href="#" :class="getAction(user.status).textColor" @click="confirmUserDisablement(user.id, user.status)">
-                                        {{ getAction(user.status).text }}
+                                    <a href="#" :class="getAction(user.is_active).textColor" @click="confirmUserDisablement(user.id, user.is_active)">
+                                        {{ getAction(user.is_active).text }}
                                     </a>
                                 </td>
                             </tr>
@@ -136,16 +136,16 @@ export default {
 
             form: this.$inertia.form({
                 user_id: null,
-                status: null,
+                is_active: null,
             })
         }
     },
 
     methods: {
-        confirmUserDisablement (id, status) {
+        confirmUserDisablement (id, is_active) {
             this.confirmingUserDisablement = true;
             this.form.user_id = id
-            this.form.status = !status
+            this.form.is_active = !is_active
         },
 
         disableUser () {
@@ -159,8 +159,8 @@ export default {
             this.confirmingUserDisablement = false
         },
 
-        getStatus (status) {
-            if (status) {
+        getStatus (is_active) {
+            if (is_active) {
                 return {
                     text: "Active",
                     bgColor: "bg-green-500"
@@ -185,8 +185,8 @@ export default {
             }
         },
 
-        getAction (status) {
-            if (status) {
+        getAction (is_active) {
+            if (is_active) {
                 return {
                     text: 'Disable',
                     textColor: 'text-red-600 hover:text-red-900',
@@ -204,7 +204,7 @@ export default {
 
     computed: {
         getModalAction () {
-            return this.getAction(!this.form.status)
+            return this.getAction(!this.form.is_active)
         }
     }
 };

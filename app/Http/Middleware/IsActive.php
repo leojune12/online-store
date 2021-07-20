@@ -17,7 +17,7 @@ class IsActive
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user()->status == 0) {
+        if (Auth::user()->is_active == 0) {
 
             // Auth::logout();
 

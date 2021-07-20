@@ -96,9 +96,8 @@ class UserController extends Controller
 
     public function disable(Request $request, $id)
     {
-
         Validator::make($request->all(), [
-            'status' => [
+            'is_active' => [
                 'required',
                 'boolean',
             ]
@@ -111,7 +110,7 @@ class UserController extends Controller
             $user = User::find($id);
 
             $user->update([
-                'status' => $request->status,
+                'is_active' => $request->is_active,
             ]);
 
             DB::commit();
@@ -125,7 +124,7 @@ class UserController extends Controller
             ]);
         }
 
-        $method = $request->status ? 'enabled' : 'disabled';
+        $method = $request->is_active ? 'enabled' : 'disabled';
 
         return back()->with('alert', [
             'status' => 'success',
