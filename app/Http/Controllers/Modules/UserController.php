@@ -52,10 +52,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
         //
     }
@@ -63,10 +63,10 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
         //
     }
@@ -75,10 +75,10 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
         //
     }
@@ -86,15 +86,21 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
         //
     }
 
-    public function disable(Request $request, $id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function disable(Request $request, User $user)
     {
         Validator::make($request->all(), [
             'is_active' => [
@@ -107,13 +113,19 @@ class UserController extends Controller
 
         try {
 
-            $user = User::find($id);
-
             $user->update([
                 'is_active' => $request->is_active,
             ]);
 
             DB::commit();
+
+            $method = $request->is_active ? 'enabled' : 'disabled';
+
+            return back()->with('alert', [
+                'status' => 'success',
+                'message' => 'User ' . $method . ' successfully!'
+            ]);
+
         } catch (Throwable $e) {
 
             DB::rollBack();
@@ -123,12 +135,5 @@ class UserController extends Controller
                 'message' => 'Whoops! Something went wrong. Please try again.',
             ]);
         }
-
-        $method = $request->is_active ? 'enabled' : 'disabled';
-
-        return back()->with('alert', [
-            'status' => 'success',
-            'message' => 'User ' . $method . ' successfully!'
-        ]);
     }
 }
