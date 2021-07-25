@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class PermissionController extends Controller
@@ -54,8 +53,6 @@ class PermissionController extends Controller
 
         $role = Role::create(['guard_name' => 'web', 'name' => $request->name]);
 
-        // $role = Role::create(['name' => $request->name]);
-
         return redirect('/permissions')->with('alert', [
             'status' => 'success',
             'message' => 'Role created successfully!'
@@ -79,13 +76,11 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Role $permission)
     {
-        $role = Role::find($id);
-
         return inertia('Permission/FormRolesAndPermissions', [
             'title' => 'Update',
-            'role' => $role
+            'role' => $permission
         ]);
     }
 
@@ -96,15 +91,13 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Role $permission)
     {
         Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255', Rule::unique('roles')->ignore($id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('roles')->ignore($permission->id)],
         ])->validateWithBag('submitRole');
 
-        $role = Role::find($id);
-
-        $role->update([
+        $permission->update([
             'name' => $request->name
         ]);
 
@@ -120,11 +113,9 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Role $permission)
     {
-        $role = Role::find($id);
-
-        $role->delete();
+        $permission->delete();
 
         return back()->with('alert', [
             'status' => 'success',
