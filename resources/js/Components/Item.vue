@@ -1,5 +1,5 @@
 <template>
-	<inertia-link :href="'/products/' + item.slug" class="transform hover:-translate-y-1 hover:shadow-lg delay-75 ease-in transition bg-white">
+	<inertia-link :href="route('products.show', item.slug)" class="transform hover:-translate-y-1 hover:shadow-xl delay-75 ease-in transition bg-white">
 		<div class="block relative h-48 overflow-hidden">
 			<img
 				alt="ecommerce"
@@ -49,7 +49,7 @@ export default {
 
 			return new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(price)
 		}
-	}
+	},
 };
 
 </script>
