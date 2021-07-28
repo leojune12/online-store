@@ -30,7 +30,8 @@ module.exports = {
             purple: colors.purple,
             pink: colors.pink,
             emerald: colors.emerald,
-            white: colors.white
+            white: colors.white,
+            orange: colors.orange
           }
     },
 
