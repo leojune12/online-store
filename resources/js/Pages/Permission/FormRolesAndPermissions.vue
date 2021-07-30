@@ -35,7 +35,7 @@
                 </jet-action-message>
 
                 <inertia-link
-                  href="/permissions"
+                  :href="route('permissions.index')"
                   class="mr-2"
                   :class="{ 'opacity-25': form.processing }"
                   :disabled="form.processing"

@@ -12,7 +12,7 @@
 				/>
 				<div class="flex justify-between items-center mb-3 sm:ml-0 ml-3">
 					<inertia-link
-						href="/permissions/create"
+						:href="route('permissions.create')"
 						class="rounded bg-emerald-500 text-white px-3 py-1 hover:bg-emerald-600 flex items-center"
 					>
 						Add Role
