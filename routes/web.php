@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Modules\CategoryController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -32,5 +33,7 @@ Route::middleware(['is_active', 'auth:sanctum', 'verified'])->group(function () 
         Route::resource('users', UserController::class);
 
         Route::post('users/{user}/disable', [UserController::class, 'disable'])->name('users.disable');
+
+        Route::resource('categories', CategoryController::class);
     });
 });

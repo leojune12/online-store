@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Modules;
 
-use App\Http\Controllers\Controller;
+use Throwable;
 use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -13,9 +17,16 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $alert = $request->session()->get('alert');
+
+        $categories = Category::orderBy('id', 'DESC')->paginate(5);
+
+        return inertia('Category/Categories', [
+            'categories' => $categories,
+            'alert' => $alert
+        ]);
     }
 
     /**
@@ -25,7 +36,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Category/FormCategory', [
+            'title' => 'Create',
+        ]);
     }
 
     /**
@@ -36,7 +49,28 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255', 'unique:categories'],
+        ])->validateWithBag('submitCategory');
+
+        try {
+
+            Category::create([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+            ]);
+
+            return redirect('categories')->with('alert', [
+                'status' => 'success',
+                'message' => 'Category created successfully!'
+            ]);
+        } catch (Throwable $e) {
+
+            return back()->with('alert', [
+                'status' => 'error',
+                'message' => 'Whoops! Something went wrong. Please try again.',
+            ]);
+        }
     }
 
     /**
@@ -58,7 +92,10 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return inertia('Category/FormCategory', [
+            'title' => 'Update',
+            'category' => $category
+        ]);
     }
 
     /**
@@ -70,7 +107,28 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255', Rule::unique('categories')->ignore($category->id)],
+        ])->validateWithBag('submitCategory');
+
+        try {
+
+            $category->update([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+            ]);
+
+            return redirect('categories')->with('alert', [
+                'status' => 'success',
+                'message' => 'Category updated successfully!'
+            ]);
+        } catch (Throwable $e) {
+
+            return back()->with('alert', [
+                'status' => 'error',
+                'message' => 'Whoops! Something went wrong. Please try again.',
+            ]);
+        }
     }
 
     /**
@@ -81,6 +139,20 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        try {
+
+            $category->delete();
+
+            return redirect('categories')->with('alert', [
+                'status' => 'success',
+                'message' => 'Category deleted successfully!'
+            ]);
+        } catch (Throwable $e) {
+
+            return back()->with('alert', [
+                'status' => 'error',
+                'message' => 'Whoops! Something went wrong. Please try again.',
+            ]);
+        }
     }
 }
