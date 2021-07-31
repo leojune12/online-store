@@ -21,7 +21,7 @@ class CategoryController extends Controller
     {
         $alert = $request->session()->get('alert');
 
-        $categories = Category::orderBy('id', 'DESC')->paginate(5);
+        $categories = Category::orderBy('id', 'DESC')->paginate(10);
 
         return inertia('Category/Categories', [
             'categories' => $categories,
