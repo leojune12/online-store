@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Shop;
 use App\Models\Team;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserFactory extends Factory
 {
@@ -65,5 +66,27 @@ class UserFactory extends Factory
                 }),
             'ownedTeams'
         );
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterMaking(function (User $user) {
+            //
+        })->afterCreating(function (User $user) {
+
+            $shop_name = $user->name . "'s Shop";
+
+            Shop::create([
+                'user_id' => $user->id,
+                'slug' => Str::slug($shop_name),
+                'name' => $shop_name,
+                'description' => $this->faker->realText(320),
+            ]);
+        });
     }
 }
