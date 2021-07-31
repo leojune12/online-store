@@ -9,7 +9,7 @@
 				/>
 				<div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
 				<h2 class="text-sm title-font text-gray-500 tracking-widest">
-					{{ getCategories(product.categories) }}
+					{{ product.category.name }}
 				</h2>
 				<h1 class="text-gray-900 text-3xl title-font font-medium mb-1">
 					{{ product.name }}
@@ -220,18 +220,6 @@ export default {
 	},
 
 	methods: {
-		getCategories (categories) {
-
-			let category = ''
-
-			categories.map(function(value, key) {
-
-				category += value.name + (key == categories.length - 1 ? '' : ', ')
-			});
-
-			return category
-		},
-
 		getPrice (price) {
 
 			return new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(price)

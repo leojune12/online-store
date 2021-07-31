@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Shop;
 use App\Models\Order;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
@@ -13,9 +14,14 @@ class Product extends Model
 
     protected $guarded = [];
 
-    public function categories()
+    public function getRouteKeyName()
     {
-        return $this->belongsToMany(Category::class);
+        return 'slug';
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function orders()
@@ -23,8 +29,8 @@ class Product extends Model
         return $this->belongsToMany(Order::class);
     }
 
-    public function getRouteKeyName()
+    public function shop()
     {
-        return 'slug';
+        return $this->belongsTo(Shop::class);
     }
 }

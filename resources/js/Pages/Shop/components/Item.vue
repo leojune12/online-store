@@ -10,7 +10,7 @@
 		<div class="mt-4 flex flex-col p-2">
 			<div>
 				<h3 class="text-gray-500 text-xs tracking-widest title-font mb-1">
-					{{ getCategories(item.categories) }}
+					{{ item.category.name }}
 				</h3>
 				<h2 class="text-gray-900 title-font text-lg font-medium">
 					{{ item.name }}
@@ -33,18 +33,6 @@ export default {
 	},
 
 	methods: {
-		getCategories (categories) {
-
-			let category = ''
-
-			categories.map(function(value, key) {
-
-				category += value.name + (key == categories.length - 1 ? '' : ', ')
-			});
-
-			return category
-		},
-
 		getPrice (price) {
 
 			return new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(price)
