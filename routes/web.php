@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Modules\CategoryController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\Modules\ShopController;
 use App\Http\Controllers\Modules\UserController;
 use App\Http\Controllers\Modules\ProductController;
+use App\Http\Controllers\Modules\CategoryController;
 use App\Http\Controllers\Modules\PermissionController;
 
 // Route::get('/', function () {
@@ -25,6 +26,8 @@ Route::middleware(['is_active', 'auth:sanctum', 'verified'])->group(function () 
     })->name('dashboard');
 
     Route::resource('products', ProductController::class);
+
+    Route::resource('shop', ShopController::class);
 
     Route::middleware(['role:Superadmin|Admin'])->group(function () {
 
