@@ -30,7 +30,7 @@
 
                             <!-- Current Profile Photo -->
                             <div class="mt-2" v-show="! photoPreview">
-                                <img :src="cover_photo" :alt="shop.name" class="rounded-full h-20 w-20 object-cover">
+                                <img :src="cover_photo" :alt="shop.name" class="w-full h-80 object-contain">
                             </div>
 
                             <!-- New Profile Photo Preview -->
@@ -154,6 +154,11 @@ export default {
 
     methods: {
         submitShop() {
+
+            if (this.$refs.photo) {
+                this.form.photo = this.$refs.photo.files[0]
+            }
+
             if (this.title == "Create") {
                 this.form.post(route("shop.store"), {
                 errorBag: "submitShop",
@@ -185,11 +190,9 @@ export default {
 
         updatePhotoPreview() {
 
-            if (this.$refs.photo) {
-                this.form.photo = this.$refs.photo.files[0]
-            }
+            const photo = this.$refs.photo.files[0];
 
-            if (! this.form.photo) return;
+            if (! photo) return;
 
             const reader = new FileReader();
 
@@ -197,7 +200,7 @@ export default {
                 this.photoPreview = e.target.result;
             };
 
-            reader.readAsDataURL(this.form.photo);
+            reader.readAsDataURL(photo);
         },
 
         deletePhoto() {

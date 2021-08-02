@@ -52,6 +52,7 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:500'],
@@ -69,7 +70,9 @@ class ShopController extends Controller
                 'description' => $request->description
             ]);
 
-            $shop->addMediaFromRequest('photo')->toMediaCollection('cover_photos');
+            if ($request->photo) {
+                $shop->addMediaFromRequest('photo')->toMediaCollection('cover_photos');
+            }
 
             DB::commit();
 
@@ -109,9 +112,9 @@ class ShopController extends Controller
      */
     public function edit(Shop $shop)
     {
-        $cover_photo = $shop->getMedia('cover_photos');
+        $cover_photo = $shop->getFirstMediaUrl('cover_photos');
 
-        dd($cover_photo[0]->getFullUrl());
+        // dd($cover_photo[0]->getFullUrl());
 
         return inertia('Shop/FormShop', [
             'title' => 'Update',
@@ -129,7 +132,44 @@ class ShopController extends Controller
      */
     public function update(Request $request, Shop $shop)
     {
-        //
+        dd($request->all());
+        Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:500'],
+            'photo' => ['image', 'max:1024']
+        ])->validateWithBag('submitShop');
+
+        DB::beginTransaction();
+
+        try {
+
+            $shop->update([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'description' => $request->description
+            ]);
+
+            if ($request->photo) {
+                $shop->addMediaFromRequest('photo')->toMediaCollection('cover_photos');
+            }
+
+            DB::commit();
+
+            return redirect(route('shop.index'))->with('alert', [
+                'status' => 'success',
+                'message' => 'Shop updated successfully!'
+            ]);
+        } catch (Throwable $e) {
+
+            dd($e);
+
+            DB::rollBack();
+
+            return back()->with('alert', [
+                'status' => 'error',
+                'message' => 'Whoops! Something went wrong. Please try again.',
+            ]);
+        }
     }
 
     /**

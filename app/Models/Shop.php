@@ -25,4 +25,11 @@ class Shop extends Model implements HasMedia
     {
         return $this->hasMany(Product::class);
     }
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('cover_photos')
+            ->singleFile();
+    }
 }
