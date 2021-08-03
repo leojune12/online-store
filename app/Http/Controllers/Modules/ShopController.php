@@ -117,6 +117,10 @@ class ShopController extends Controller
      */
     public function edit(Shop $shop)
     {
+        if (Auth::user()->shop->id != $shop->id) {
+            abort(403);
+        }
+
         $cover_photo = $shop->getFirstMediaUrl('cover_photos');
 
         return inertia('Shop/FormShop', [
