@@ -29,6 +29,11 @@ Route::middleware(['is_active', 'auth:sanctum', 'verified'])->group(function () 
 
     Route::resource('shop', ShopController::class);
 
+    Route::prefix('/shop')->group(function () {
+        Route::post('/update-info/{shop}', [ShopController::class, 'updateShop'])->name('shop.update-info');
+        Route::delete('/delete-cover-photo/{shop}', [ShopController::class, 'deleteCoverPhoto'])->name('shop.delete-cover-photo');
+    });
+
     Route::middleware(['role:Superadmin|Admin'])->group(function () {
 
         Route::resource('permissions', PermissionController::class);

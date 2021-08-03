@@ -28,15 +28,14 @@
 
                             <jet-label for="photo" value="Cover Photo" />
 
-                            <!-- Current Profile Photo -->
-                            <div class="mt-2" v-show="! photoPreview">
-                                <img :src="cover_photo" :alt="shop.name" class="w-full h-80 object-contain">
-                            </div>
+                            <!-- Profile Photo -->
+                            <div class="mt-2 bg-gray-200">
+                                <!-- Current Profile Photo -->
+                                <img :src="getCoverPhoto" :alt="shop.name" class="w-full h-80 object-contain" v-if="!photoPreview">
 
-                            <!-- New Profile Photo Preview -->
-                            <div class="mt-2" v-show="photoPreview">
+                                <!-- New Profile Photo Preview -->
                                 <span class="block w-full h-80"
-                                    :style="'background-size: contain; background-repeat: no-repeat; background-position: center center; background-image: url(\'' + photoPreview + '\');'">
+                                    :style="'background-size: contain; background-repeat: no-repeat; background-position: center center; background-image: url(\'' + photoPreview + '\');'" v-else>
                                 </span>
                             </div>
 
@@ -44,9 +43,9 @@
                                 Select A New Photo
                             </jet-secondary-button>
 
-                            <!-- <jet-secondary-button type="button" class="mt-2" @click.prevent="deletePhoto" v-if="user.profile_photo_path">
+                            <jet-secondary-button type="button" class="mt-2" @click.prevent="deletePhoto" v-if="cover_photo">
                                 Remove Photo
-                            </jet-secondary-button> -->
+                            </jet-secondary-button>
 
                             <jet-input-error :message="form.errors.photo" class="mt-2" />
                         </div>
@@ -136,7 +135,6 @@ export default {
         },
         cover_photo: {
             type: String,
-            default: window.location.origin + '/coverphoto.png'
         }
     },
 
@@ -152,6 +150,12 @@ export default {
         };
     },
 
+    computed: {
+        getCoverPhoto () {
+            return this.cover_photo ? this.cover_photo : 'https://ui-avatars.com/api/?name=' + this.shop.name + '&color=7F9CF5&background=EBF4FF'
+        }
+    },
+
     methods: {
         submitShop() {
 
@@ -161,13 +165,13 @@ export default {
 
             if (this.title == "Create") {
                 this.form.post(route("shop.store"), {
-                errorBag: "submitShop",
-                preserveScroll: true,
+                    errorBag: "submitShop",
+                    preserveScroll: true,
                 });
             } else {
-                this.form.patch(route("shop.update", this.shop.id), {
-                errorBag: "submitShop",
-                preserveScroll: true,
+                this.form.post(route("shop.update-info", this.shop.id), {
+                    errorBag: "submitShop",
+                    preserveScroll: true,
                 });
             }
         },
@@ -204,7 +208,7 @@ export default {
         },
 
         deletePhoto() {
-            this.$inertia.delete(route('current-user-photo.destroy'), {
+            this.$inertia.delete(route('shop.delete-cover-photo', this.shop.id), {
                 preserveScroll: true,
                 onSuccess: () => {
                     this.photoPreview = null;

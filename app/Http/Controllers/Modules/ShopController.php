@@ -6,10 +6,10 @@ use Throwable;
 use App\Models\Shop;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 
 class ShopController extends Controller
@@ -39,6 +39,12 @@ class ShopController extends Controller
      */
     public function create()
     {
+        $shop = Auth::user()->shop;
+
+        if ($shop) {
+            return redirect(route('shop.edit', $shop->id));
+        }
+
         return inertia('Shop/FormShop', [
             'title' => 'Create',
         ]);
@@ -52,9 +58,8 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:shops'],
             'description' => ['nullable', 'string', 'max:500'],
             'photo' => ['image', 'max:1024']
         ])->validateWithBag('submitShop');
@@ -114,8 +119,6 @@ class ShopController extends Controller
     {
         $cover_photo = $shop->getFirstMediaUrl('cover_photos');
 
-        // dd($cover_photo[0]->getFullUrl());
-
         return inertia('Shop/FormShop', [
             'title' => 'Update',
             'shop' => $shop,
@@ -132,12 +135,29 @@ class ShopController extends Controller
      */
     public function update(Request $request, Shop $shop)
     {
-        dd($request->all());
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Shop  $shop
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Shop $shop)
+    {
+        //
+    }
+
+    public function updateShop(Request $request, Shop $shop)
+    {
         Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('shops')->ignore($shop->id)],
             'description' => ['nullable', 'string', 'max:500'],
             'photo' => ['image', 'max:1024']
         ])->validateWithBag('submitShop');
+
+        // dd($request->all());
 
         DB::beginTransaction();
 
@@ -172,14 +192,28 @@ class ShopController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Shop  $shop
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Shop $shop)
+    public function deleteCoverPhoto(Shop $shop)
     {
-        //
+        $cover_photo = $shop->getFirstMedia('cover_photos');
+
+        try {
+
+            $cover_photo->delete();
+
+            return redirect(route('shop.index'))->with('alert', [
+                'status' => 'success',
+                'message' => 'Cover photo deleted successfully!'
+            ]);
+        } catch (Throwable $e) {
+
+            dd($e);
+
+            DB::rollBack();
+
+            return back()->with('alert', [
+                'status' => 'error',
+                'message' => 'Whoops! Something went wrong. Please try again.',
+            ]);
+        }
     }
 }
