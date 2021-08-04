@@ -34,6 +34,8 @@ Route::middleware(['is_active', 'auth:sanctum', 'verified'])->group(function () 
         Route::delete('/delete-cover-photo/{shop}', [ShopController::class, 'deleteCoverPhoto'])->name('shop.delete-cover-photo');
     });
 
+    Route::resource('products', ProductController::class);
+
     Route::middleware(['role:Superadmin|Admin'])->group(function () {
 
         Route::resource('permissions', PermissionController::class);
