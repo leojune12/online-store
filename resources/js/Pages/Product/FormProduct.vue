@@ -1,7 +1,9 @@
 <template>
     <app-layout>
         <template #header>
-          <h2 class="font-semibold text-xl text-gray-800 leading-tight">Products</h2>
+          	<h2 class="font-semibold text-xl text-gray-800 leading-tight">
+				Products
+			</h2>
         </template>
 
         <div class="py-12">
@@ -15,15 +17,31 @@
                     </template>
 
                     <template #form>
+						<!-- Category -->
+                        <div class="col-span-6 sm:col-span-4">
+                            <jet-label for="category" value="Category" />
+                            <select id="category" name="category" autocomplete="category" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="form.category">
+								<option value="">Select Category</option>
+								<option
+									v-for="category in categories"
+									:key="category.id"
+									:value="category.id"
+								>
+									{{ category.name }}
+								</option>
+							</select>
+                            <jet-input-error :message="form.errors.category" class="mt-2" />
+                        </div>
+
                         <!-- Name -->
                         <div class="col-span-6 sm:col-span-4">
-                            <jet-label for="category" value="Product Name (Minimum of 20)" />
+                            <jet-label for="product" value="Product Name (Minimum of 20)" />
                             <jet-input
-                                id="category"
+                                id="product"
                                 type="text"
                                 class="mt-1 block w-full"
                                 v-model="form.name"
-                                autocomplete="category"
+                                autocomplete="product"
                             />
                             <jet-input-error :message="form.errors.name" class="mt-2" />
                         </div>
@@ -44,14 +62,14 @@
 
                     <template #actions>
                         <jet-action-message :on="form.recentlySuccessful" class="mr-3">
-                        Saved.
+                        	Saved.
                         </jet-action-message>
 
                         <inertia-link
-                        :href="route('categories.index')"
-                        class="mr-2"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
+							:href="route('categories.index')"
+							class="mr-2"
+							:class="{ 'opacity-25': form.processing }"
+							:disabled="form.processing"
                         >
                         <jet-secondary-button type="button">
                             Cancel
@@ -59,11 +77,11 @@
                         </inertia-link>
 
                         <jet-button
-                        class="bg-emerald-500 text-white hover:bg-emerald-600"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
+							class="bg-emerald-500 text-white hover:bg-emerald-600"
+							:class="{ 'opacity-25': form.processing }"
+							:disabled="form.processing"
                         >
-                        {{ title }}
+                        	{{ title }}
                         </jet-button>
                     </template>
                 </jet-form-section>
@@ -82,57 +100,57 @@ import JetLabel from "@/Jetstream/Label";
 import JetActionMessage from "@/Jetstream/ActionMessage";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton";
 import TextareaComponent from "@/Components/Textarea";
+import SelectComponent from "@/Components/Select";
 
 export default {
-  components: {
-    AppLayout,
-    JetActionMessage,
-    JetButton,
-    JetFormSection,
-    JetInput,
-    JetInputError,
-    JetLabel,
-    JetSecondaryButton,
-    TextareaComponent,
-  },
-
-  props: {
-    title: {
-      type: String,
-      default: "Create",
+    components: {
+      AppLayout,
+      JetActionMessage,
+      JetButton,
+      JetFormSection,
+      JetInput,
+      JetInputError,
+      JetLabel,
+      JetSecondaryButton,
+      TextareaComponent,
+	  SelectComponent,
     },
-    category: {
-      type: Object,
-      default: {
-        id: null,
-        name: null,
-      },
-    },
-  },
 
-  data() {
-    return {
-      form: this.$inertia.form({
-        name: this.category.name,
-      }),
-    };
-  },
-
-  methods: {
-    submitProduct() {
-      if (this.title == "Create") {
-        this.form.post(route("categories.store"), {
-          errorBag: "submitProduct",
-          preserveScroll: true,
-        });
-      } else {
-        this.form.patch(route("categories.update", this.category.id), {
-          errorBag: "submitProduct",
-          preserveScroll: true,
-        });
-      }
+    props: {
+        title: {
+            type: String,
+            default: "Create",
+        },
+        categories: {
+            type: Object,
+        },
     },
-  },
+
+    data() {
+		return {
+			form: this.$inertia.form({
+				name: null,
+				description: null,
+				category: "",
+			}),
+		};
+    },
+
+    methods: {
+		submitProduct() {
+			if (this.title == "Create") {
+				this.form.post(route("categories.store"), {
+					errorBag: "submitProduct",
+					preserveScroll: true,
+				});
+			} else {
+				this.form.patch(route("categories.update", this.category.id), {
+					errorBag: "submitProduct",
+					preserveScroll: true,
+				});
+			}
+		},
+    },
 };
 </script>
 

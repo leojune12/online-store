@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Modules;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -29,7 +30,12 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::get(['id', 'name']);
+
+        return inertia('Product/FormProduct', [
+            'title' => 'Create',
+            'categories' => $categories,
+        ]);
     }
 
     /**
