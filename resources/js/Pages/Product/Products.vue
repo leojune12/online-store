@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Item from "@/Pages/Shop/components/Item";
+import Item from "@/Pages/Product/components/Item";
 import AppLayout from "@/Layouts/AppLayout";
 import Pagination from "@/Components/Pagination"
 

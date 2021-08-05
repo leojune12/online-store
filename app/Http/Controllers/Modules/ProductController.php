@@ -17,7 +17,7 @@ class ProductController extends Controller
     {
         $products = Product::with('category:id,name')->paginate(48);
 
-        return inertia('Shop/Products', [
+        return inertia('Product/Products', [
             'products' => $products,
         ]);
     }
@@ -51,7 +51,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return inertia('Shop/ShowItem', [
+        return inertia('Product/ShowItem', [
             'product' => $product,
             'categories' => $product->category
         ]);

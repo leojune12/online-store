@@ -25,8 +25,6 @@ Route::middleware(['is_active', 'auth:sanctum', 'verified'])->group(function () 
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::resource('products', ProductController::class);
-
     Route::resource('shop', ShopController::class);
 
     Route::prefix('/shop')->group(function () {
