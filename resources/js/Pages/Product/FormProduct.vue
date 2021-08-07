@@ -58,6 +58,45 @@
                             />
                             <jet-input-error :message="form.errors.description" class="mt-2" />
                         </div>
+
+                        <!-- Photos -->
+                        <div class="col-span-6 sm:col-span-4 flex flex-wrap gap-x-4">
+                            <!-- Cover Photo -->
+                            <div class="col-span-6 sm:col-span-4">
+                                <image-input
+                                    v-model="form.cover_photo"
+                                />
+                                <jet-label for="images" value="Cover Photo" />
+                                <jet-input-error :message="form.errors.cover_photo" class="mt-2" />
+                            </div>
+
+                            <!-- Photo 1 -->
+                            <div class="col-span-6 sm:col-span-4">
+                                <image-input
+                                    v-model="form.photo_1"
+                                />
+                                <jet-label for="images" value="Photo 1" />
+                                <jet-input-error :message="form.errors.photo_1" class="mt-2" />
+                            </div>
+
+                            <!-- Photo 2 -->
+                            <div class="col-span-6 sm:col-span-4">
+                                <image-input
+                                    v-model="form.photo_2"
+                                />
+                                <jet-label for="images" value="Photo 2" />
+                                <jet-input-error :message="form.errors.photo_2" class="mt-2" />
+                            </div>
+
+                            <!-- Photo 3 -->
+                            <div class="col-span-6 sm:col-span-4">
+                                <image-input
+                                    v-model="form.photo_3"
+                                />
+                                <jet-label for="images" value="Photo 3" />
+                                <jet-input-error :message="form.errors.photo_3" class="mt-2" />
+                            </div>
+                        </div>
                     </template>
 
                     <template #actions>
@@ -101,6 +140,7 @@ import JetActionMessage from "@/Jetstream/ActionMessage";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton";
 import TextareaComponent from "@/Components/Textarea";
 import SelectComponent from "@/Components/Select";
+import ImageInput from "@/Components/ImageInput";
 
 export default {
     components: {
@@ -114,6 +154,7 @@ export default {
       JetSecondaryButton,
       TextareaComponent,
 	  SelectComponent,
+      ImageInput
     },
 
     props: {
@@ -132,6 +173,10 @@ export default {
 				name: null,
 				description: null,
 				category: "",
+                cover_photo: null,
+                photo_1: null,
+                photo_2: null,
+                photo_3: null,
 			}),
 		};
     },
