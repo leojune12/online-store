@@ -76,7 +76,7 @@ class ShopController extends Controller
             ]);
 
             if ($request->photo) {
-                $shop->addMediaFromRequest('photo')->toMediaCollection('cover_photos');
+                $shop->addMediaFromRequest('photo')->toMediaCollection('shop_cover_photos');
             }
 
             DB::commit();
@@ -121,7 +121,7 @@ class ShopController extends Controller
             abort(403);
         }
 
-        $cover_photo = $shop->getFirstMediaUrl('cover_photos');
+        $cover_photo = $shop->getFirstMediaUrl('shop_cover_photos');
 
         return inertia('Shop/FormShop', [
             'title' => 'Update',
@@ -174,7 +174,7 @@ class ShopController extends Controller
             ]);
 
             if ($request->photo) {
-                $shop->addMediaFromRequest('photo')->toMediaCollection('cover_photos');
+                $shop->addMediaFromRequest('photo')->toMediaCollection('shop_cover_photos');
             }
 
             DB::commit();
@@ -198,7 +198,7 @@ class ShopController extends Controller
 
     public function deleteCoverPhoto(Shop $shop)
     {
-        $cover_photo = $shop->getFirstMedia('cover_photos');
+        $cover_photo = $shop->getFirstMedia('shop_cover_photos');
 
         try {
 
