@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Modules;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -30,12 +33,23 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::get(['id', 'name']);
+        $shop = Auth::user()->shop;
 
-        return inertia('Product/FormProduct', [
-            'title' => 'Create',
-            'categories' => $categories,
-        ]);
+        if ($shop) {
+
+            $categories = Category::get(['id', 'name']);
+
+            return inertia('Product/FormProduct', [
+                'title' => 'Create',
+                'categories' => $categories,
+            ]);
+        } else {
+
+            return redirect(route('shop.create'))->with('alert', [
+                'status' => 'info',
+                'message' => 'Create a shop where you can display your products.'
+            ]);;
+        }
     }
 
     /**
@@ -46,7 +60,54 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+
+        Validator::make($request->all(), [
+            'category_id' => ['required'],
+            'name' => ['required', 'string', 'min:20', 'max:255', 'unique:shops'],
+            'description' => ['nullable', 'string', 'min:20', 'max:500'],
+            'price' => ['required', 'min:1'],
+            'stock' => ['required', 'min:0'],
+            'condition' => [],
+            'publish' => [],
+            'cover_image' => ['required', 'image', 'max:1024'],
+            'image_1' => ['nullable', 'image', 'max:1024'],
+            'image_2' => ['nullable', 'image', 'max:1024'],
+            'image_3' => ['nullable', 'image', 'max:1024'],
+        ])->validateWithBag('submitProduct');
+
+        DB::beginTransaction();
+
+        try {
+
+            $shop = Shop::create([
+                'user_id' => Auth::id(),
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'description' => $request->description
+            ]);
+
+            if ($request->photo) {
+                $shop->addMediaFromRequest('photo')->toMediaCollection('shop_cover_photos');
+            }
+
+            DB::commit();
+
+            return redirect(route('shop.index'))->with('alert', [
+                'status' => 'success',
+                'message' => 'Shop created successfully!'
+            ]);
+        } catch (Throwable $e) {
+
+            dd($e);
+
+            DB::rollBack();
+
+            return back()->with('alert', [
+                'status' => 'error',
+                'message' => 'Whoops! Something went wrong. Please try again.',
+            ]);
+        }
     }
 
     /**

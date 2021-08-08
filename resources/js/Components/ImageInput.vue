@@ -66,7 +66,7 @@
             }
         },
 
-        emits: ['update:modelValue'],
+        // emits: ['update:modelValue'],
 
         data () {
             return {
@@ -95,6 +95,8 @@
                 };
 
                 reader.readAsDataURL(photo);
+
+                // this.$emit('update:modelValue', photo)
             },
 
             clearPhotoFileInput() {

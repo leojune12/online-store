@@ -227,10 +227,10 @@ export default {
 			form: this.$inertia.form({
 				name: null,
                 description: null,
-                condition: "1",
                 category: "",
-                price: 0,
+                price: 1,
                 stock: 1,
+                condition: "1",
                 cover_image: null,
                 image_1: null,
                 image_2: null,
@@ -242,12 +242,12 @@ export default {
     methods: {
 		submitProduct() {
 			if (this.title == "Create") {
-				this.form.post(route("categories.store"), {
+				this.form.post(route("products.store"), {
 					errorBag: "submitProduct",
 					preserveScroll: true,
 				});
 			} else {
-				this.form.patch(route("categories.update", this.category.id), {
+				this.form.patch(route("products.update", this.category.id), {
 					errorBag: "submitProduct",
 					preserveScroll: true,
 				});

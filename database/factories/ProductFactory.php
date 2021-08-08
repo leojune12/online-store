@@ -47,7 +47,11 @@ class ProductFactory extends Factory
             'category_id' => $categories->random(1)->pluck('id')->toArray()[0],
             'slug' => Str::slug($name),
             'description' => $this->faker->realText(320),
-            'price' => $this->faker->numberBetween(100, 10000)
+            'price' => $this->faker->numberBetween(100, 10000),
+            'stock' => $this->faker->numberBetween(5, 100),
+            'condition' => $this->faker->numberBetween(0, 1),
+            'publish' => $this->faker->numberBetween(0, 1),
+            'view_count' => $this->faker->numberBetween(0, 500),
         ];
     }
 }
