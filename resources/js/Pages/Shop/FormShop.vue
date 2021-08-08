@@ -6,6 +6,9 @@
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
+                <alert />
+
                 <jet-form-section @submitted="submitShop">
                     <template #title> {{ title }} Shop </template>
 
@@ -106,6 +109,7 @@ import JetLabel from "@/Jetstream/Label";
 import JetActionMessage from "@/Jetstream/ActionMessage";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton";
 import TextareaComponent from "@/Components/Textarea";
+import Alert from "@/Components/Alert";
 
 export default {
     components: {
@@ -118,6 +122,7 @@ export default {
         JetLabel,
         JetSecondaryButton,
         TextareaComponent,
+        Alert,
     },
 
     props: {

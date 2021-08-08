@@ -6,10 +6,7 @@
 
 		<div class="py-12">
 			<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-				<alert
-					v-if="!!alert"
-					:alert="alert"
-				/>
+				<alert />
 				<div class="flex justify-between items-center mb-3 sm:ml-0 ml-3">
 					<inertia-link
 						:href="route('permissions.create')"
@@ -40,10 +37,6 @@
 		},
 
 		props: {
-			alert: {
-				type: Object,
-				default: null,
-			},
 			roles: Object,
 		},
 	};
