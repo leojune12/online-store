@@ -17,6 +17,52 @@
                     </template>
 
                     <template #form>
+                        <!-- Images -->
+                        <div class="col-span-6 sm:col-span-4">
+                            <jet-label for="images" value="Product Image" />
+                            <div id="images" class="flex flex-wrap gap-x-6 mt-1">
+                                <!-- Cover Image -->
+                                <div class="col-span-6 sm:col-span-4">
+                                    <image-input
+                                        id="cover_image"
+                                        v-model="form.cover_image"
+                                    />
+                                    <jet-label for="cover_image" value="*Cover Image" class="mt-1 text-center" />
+                                    <jet-input-error :message="form.errors.cover_image" class="mt-2" />
+                                </div>
+
+                                <!-- Image 1 -->
+                                <div class="col-span-6 sm:col-span-4">
+                                    <image-input
+                                        id="image_1"
+                                        v-model="form.image_1"
+                                    />
+                                    <jet-label for="image_1" value="Image 1" class="mt-1 text-center" />
+                                    <jet-input-error :message="form.errors.image_1" class="mt-2" />
+                                </div>
+
+                                <!-- Image 2 -->
+                                <div class="col-span-6 sm:col-span-4">
+                                    <image-input
+                                        id="image_2"
+                                        v-model="form.image_2"
+                                    />
+                                    <jet-label for="image_2" value="Image 2" class="mt-1 text-center" />
+                                    <jet-input-error :message="form.errors.image_2" class="mt-2" />
+                                </div>
+
+                                <!-- Image 3 -->
+                                <div class="col-span-6 sm:col-span-4">
+                                    <image-input
+                                        id="image_3"
+                                        v-model="form.image_3"
+                                    />
+                                    <jet-label for="image_3" value="Image 3" class="mt-1 text-center" />
+                                    <jet-input-error :message="form.errors.image_3" class="mt-2" />
+                                </div>
+                            </div>
+                        </div>
+
 						<!-- Category -->
                         <div class="col-span-6 sm:col-span-4">
                             <jet-label for="category" value="Category" />
@@ -59,43 +105,52 @@
                             <jet-input-error :message="form.errors.description" class="mt-2" />
                         </div>
 
-                        <!-- Photos -->
-                        <div class="col-span-6 sm:col-span-4 flex flex-wrap gap-x-4">
-                            <!-- Cover Photo -->
-                            <div class="col-span-6 sm:col-span-4">
-                                <image-input
-                                    v-model="form.cover_photo"
+                        <!-- Price -->
+                        <div class="col-span-6 sm:col-span-4">
+                            <jet-label for="price" value="Price" />
+                            <!-- <jet-input
+                                id="price"
+                                type="number"
+                                class="mt-1 block w-full"
+                                v-model="form.price"
+                                autocomplete="price"
+                            /> -->
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                                    &#8369;
+                                </span>
+                                <input
+                                    type="number"
+                                    name="price"
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
+                                    autocomplete="price"
+                                    v-model="form.price"
                                 />
-                                <jet-label for="images" value="Cover Photo" />
-                                <jet-input-error :message="form.errors.cover_photo" class="mt-2" />
                             </div>
+                            <jet-input-error :message="form.errors.price" class="mt-2" />
+                        </div>
 
-                            <!-- Photo 1 -->
-                            <div class="col-span-6 sm:col-span-4">
-                                <image-input
-                                    v-model="form.photo_1"
-                                />
-                                <jet-label for="images" value="Photo 1" />
-                                <jet-input-error :message="form.errors.photo_1" class="mt-2" />
-                            </div>
+                        <!-- Stock -->
+                        <div class="col-span-6 sm:col-span-4">
+                            <jet-label for="stock" value="Stock" />
+                            <jet-input
+                                id="stock"
+                                type="number"
+                                class="mt-1 block w-full"
+                                v-model="form.stock"
+                                autocomplete="stock"
+                            />
+                            <jet-input-error :message="form.errors.stock" class="mt-2" />
+                        </div>
 
-                            <!-- Photo 2 -->
-                            <div class="col-span-6 sm:col-span-4">
-                                <image-input
-                                    v-model="form.photo_2"
-                                />
-                                <jet-label for="images" value="Photo 2" />
-                                <jet-input-error :message="form.errors.photo_2" class="mt-2" />
-                            </div>
-
-                            <!-- Photo 3 -->
-                            <div class="col-span-6 sm:col-span-4">
-                                <image-input
-                                    v-model="form.photo_3"
-                                />
-                                <jet-label for="images" value="Photo 3" />
-                                <jet-input-error :message="form.errors.photo_3" class="mt-2" />
-                            </div>
+                        <!-- Condition -->
+                        <div class="col-span-6 sm:col-span-4">
+                            <jet-label for="condition" value="Condition" />
+                            <select id="condition" name="condition" autocomplete="condition" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="form.condition">
+								<option value="1">New</option>
+								<option value="0">Used</option>
+							</select>
+                            <jet-input-error :message="form.errors.condition" class="mt-2" />
                         </div>
                     </template>
 
@@ -116,7 +171,7 @@
                         </inertia-link>
 
                         <jet-button
-							class="bg-emerald-500 text-white hover:bg-emerald-600"
+							class="bg-purple-600 text-white hover:bg-purple-700"
 							:class="{ 'opacity-25': form.processing }"
 							:disabled="form.processing"
                         >
@@ -171,12 +226,15 @@ export default {
 		return {
 			form: this.$inertia.form({
 				name: null,
-				description: null,
-				category: "",
-                cover_photo: null,
-                photo_1: null,
-                photo_2: null,
-                photo_3: null,
+                description: null,
+                condition: "1",
+                category: "",
+                price: 0,
+                stock: 1,
+                cover_image: null,
+                image_1: null,
+                image_2: null,
+                image_3: null,
 			}),
 		};
     },
