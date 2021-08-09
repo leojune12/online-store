@@ -27,8 +27,7 @@
                                         id="cover_image"
                                         v-model="form.cover_image"
                                     />
-                                    <jet-label for="cover_image" value="*Cover Image" class="mt-1 text-center" />
-                                    <jet-input-error :message="form.errors.cover_image" class="mt-2" />
+                                    <jet-label for="cover_image" value="Cover Image" class="mt-1 text-center" />
                                 </div>
 
                                 <!-- Image 1 -->
@@ -38,7 +37,6 @@
                                         v-model="form.image_1"
                                     />
                                     <jet-label for="image_1" value="Image 1" class="mt-1 text-center" />
-                                    <jet-input-error :message="form.errors.image_1" class="mt-2" />
                                 </div>
 
                                 <!-- Image 2 -->
@@ -48,7 +46,6 @@
                                         v-model="form.image_2"
                                     />
                                     <jet-label for="image_2" value="Image 2" class="mt-1 text-center" />
-                                    <jet-input-error :message="form.errors.image_2" class="mt-2" />
                                 </div>
 
                                 <!-- Image 3 -->
@@ -58,9 +55,12 @@
                                         v-model="form.image_3"
                                     />
                                     <jet-label for="image_3" value="Image 3" class="mt-1 text-center" />
-                                    <jet-input-error :message="form.errors.image_3" class="mt-2" />
                                 </div>
                             </div>
+                            <jet-input-error :message="form.errors.cover_image" class="mt-2" />
+                            <jet-input-error :message="form.errors.image_1" class="mt-2" />
+                            <jet-input-error :message="form.errors.image_2" class="mt-2" />
+                            <jet-input-error :message="form.errors.image_3" class="mt-2" />
                         </div>
 
 						<!-- Category -->
