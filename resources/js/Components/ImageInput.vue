@@ -20,8 +20,7 @@
                 type="file"
                 accept="image/*"
                 class="hidden"
-                :value="modelValue"
-                @input="$emit('update:modelValue', $event.target.value)"
+                @input="$emit('update:modelValue', $refs.photo.files[0])"
                 ref="photo"
                 @change="updatePhotoPreview"
             >
@@ -95,8 +94,6 @@
                 };
 
                 reader.readAsDataURL(photo);
-
-                // this.$emit('update:modelValue', photo)
             },
 
             clearPhotoFileInput() {
