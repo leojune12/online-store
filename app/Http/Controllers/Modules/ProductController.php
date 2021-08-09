@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Modules;
 
+use Throwable;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -48,7 +50,7 @@ class ProductController extends Controller
             return redirect(route('shop.create'))->with('alert', [
                 'status' => 'info',
                 'message' => 'Create a shop where you can display your products.'
-            ]);;
+            ]);
         }
     }
 
@@ -60,14 +62,13 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
 
         Validator::make($request->all(), [
-            'category_id' => ['required'],
-            'name' => ['required', 'string', 'min:20', 'max:255', 'unique:shops'],
-            'description' => ['nullable', 'string', 'min:20', 'max:500'],
-            'price' => ['required', 'min:1'],
-            'stock' => ['required', 'min:0'],
+            'category' => ['required'],
+            'name' => ['required', 'string', 'min:20', 'max:255', 'unique:products'],
+            'description' => ['required', 'string', 'min:20', 'max:500'],
+            'price' => ['required', 'numeric', 'min:1'],
+            'stock' => ['required', 'numeric', 'min:0'],
             'condition' => [],
             'publish' => [],
             'cover_image' => ['required', 'image', 'max:1024'],
@@ -80,22 +81,41 @@ class ProductController extends Controller
 
         try {
 
-            $shop = Shop::create([
-                'user_id' => Auth::id(),
+            $shop = Auth::user()->shop;
+
+            $product = Product::create([
+                'shop_id' => $shop->id,
+                'category_id' => $request->category,
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
-                'description' => $request->description
+                'description' => $request->description,
+                'price' => $request->price,
+                'stock' => $request->stock,
+                'condition' => $request->condition,
+                'publish' => 1,
             ]);
 
-            if ($request->photo) {
-                $shop->addMediaFromRequest('photo')->toMediaCollection('shop_cover_photos');
+            if ($request->cover_image) {
+                $product->addMediaFromRequest('cover_image')->toMediaCollection('product_cover_images');
+
+                if ($request->image_1) {
+                    $product->addMediaFromRequest('image_1')->toMediaCollection('product_images');
+                }
+
+                if ($request->image_2) {
+                    $product->addMediaFromRequest('image_2')->toMediaCollection('product_images');
+                }
+
+                if ($request->image_3) {
+                    $product->addMediaFromRequest('image_3')->toMediaCollection('product_images');
+                }
             }
 
             DB::commit();
 
-            return redirect(route('shop.index'))->with('alert', [
+            return redirect(route('products.index'))->with('alert', [
                 'status' => 'success',
-                'message' => 'Shop created successfully!'
+                'message' => 'Product created successfully!'
             ]);
         } catch (Throwable $e) {
 
@@ -132,7 +152,23 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $shop = Auth::user()->shop;
+
+        if ($shop) {
+
+            $categories = Category::get(['id', 'name']);
+
+            return inertia('Product/FormProduct', [
+                'title' => 'Create',
+                'categories' => $categories,
+            ]);
+        } else {
+
+            return redirect(route('shop.create'))->with('alert', [
+                'status' => 'info',
+                'message' => 'Create a shop where you can display your products.'
+            ]);
+        }
     }
 
     /**
