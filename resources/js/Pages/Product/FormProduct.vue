@@ -26,6 +26,7 @@
                                     <image-input
                                         id="cover_image"
                                         v-model="form.cover_image"
+                                        :url="cover_image_url"
                                     />
                                     <jet-label for="cover_image" value="Cover Image" class="mt-1 text-center" />
                                 </div>
@@ -35,6 +36,7 @@
                                     <image-input
                                         id="image_1"
                                         v-model="form.image_1"
+                                        :url="image_1_url"
                                     />
                                     <jet-label for="image_1" value="Image 1" class="mt-1 text-center" />
                                 </div>
@@ -44,6 +46,7 @@
                                     <image-input
                                         id="image_2"
                                         v-model="form.image_2"
+                                        :url="image_2_url"
                                     />
                                     <jet-label for="image_2" value="Image 2" class="mt-1 text-center" />
                                 </div>
@@ -53,6 +56,7 @@
                                     <image-input
                                         id="image_3"
                                         v-model="form.image_3"
+                                        :url="image_3_url"
                                     />
                                     <jet-label for="image_3" value="Image 3" class="mt-1 text-center" />
                                 </div>
@@ -220,6 +224,16 @@ export default {
         categories: {
             type: Object,
         },
+        product: {
+            type: Object,
+            required: true
+        },
+        cover_image_url: {
+            type: Object
+        },
+        images: {
+            type: Object
+        }
     },
 
     data() {
@@ -231,6 +245,7 @@ export default {
                 price: 1,
                 stock: 1,
                 condition: "1",
+
                 cover_image: null,
                 image_1: null,
                 image_2: null,
@@ -254,6 +269,20 @@ export default {
 			}
 		},
     },
+
+    computed: {
+        image_1_url() {
+            return this.images[0] ? this.images[0].url : null
+        },
+
+        image_2_url() {
+            return this.images[1] ? this.images[1].url : null
+        },
+
+        image_3_url() {
+            return this.images[2] ? this.images[2].url : null
+        },
+    }
 };
 </script>
 

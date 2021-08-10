@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductController extends Controller
 {
@@ -21,7 +22,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category:id,name')->paginate(48);
+        $products = Product::with('category:id,name')->orderBy('created_at', 'DESC')->paginate(48);
 
         return inertia('Product/Products', [
             'products' => $products,
@@ -96,7 +97,7 @@ class ProductController extends Controller
             ]);
 
             if ($request->cover_image) {
-                $product->addMediaFromRequest('cover_image')->toMediaCollection('product_cover_images');
+                $product->addMediaFromRequest('cover_image')->toMediaCollection('product_cover_image');
 
                 if ($request->image_1) {
                     $product->addMediaFromRequest('image_1')->toMediaCollection('product_images');
@@ -156,11 +157,26 @@ class ProductController extends Controller
 
         if ($shop) {
 
+            $cover_image_url = $product->getFirstMediaUrl('product_cover_image');
+            $mediaItems = $product->getMedia('product_images');
+            $images = [];
+
+            foreach ($mediaItems as $item) {
+
+                array_push($images, [
+                    'id' => $item->id,
+                    'url' => $item->getUrl()
+                ]);
+            };
+
             $categories = Category::get(['id', 'name']);
 
             return inertia('Product/FormProduct', [
                 'title' => 'Create',
                 'categories' => $categories,
+                'product' => $product,
+                'cover_image_url' => $cover_image_url,
+                'images' => $images
             ]);
         } else {
 
