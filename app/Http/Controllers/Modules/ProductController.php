@@ -157,7 +157,13 @@ class ProductController extends Controller
 
         if ($shop) {
 
-            $cover_image_url = $product->getFirstMediaUrl('product_cover_image');
+            $cover_image_media = $product->getFirstMedia('product_cover_image');
+
+            $cover_image['id'] = $cover_image_media->id;
+            $cover_image['url'] = $cover_image_media->getUrl();
+
+            // dd($cover_image);
+
             $mediaItems = $product->getMedia('product_images');
             $images = [];
 
@@ -175,7 +181,7 @@ class ProductController extends Controller
                 'title' => 'Create',
                 'categories' => $categories,
                 'product' => $product,
-                'cover_image_url' => $cover_image_url,
+                'cover_image' => $cover_image,
                 'images' => $images
             ]);
         } else {

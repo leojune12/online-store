@@ -26,7 +26,7 @@
                                     <image-input
                                         id="cover_image"
                                         v-model="form.cover_image"
-                                        :url="cover_image_url"
+                                        :object-value="cover_image"
                                     />
                                     <jet-label for="cover_image" value="Cover Image" class="mt-1 text-center" />
                                 </div>
@@ -36,7 +36,7 @@
                                     <image-input
                                         id="image_1"
                                         v-model="form.image_1"
-                                        :url="image_1_url"
+                                        :object-value="image_1"
                                     />
                                     <jet-label for="image_1" value="Image 1" class="mt-1 text-center" />
                                 </div>
@@ -46,7 +46,7 @@
                                     <image-input
                                         id="image_2"
                                         v-model="form.image_2"
-                                        :url="image_2_url"
+                                        :object-value="image_2"
                                     />
                                     <jet-label for="image_2" value="Image 2" class="mt-1 text-center" />
                                 </div>
@@ -56,7 +56,7 @@
                                     <image-input
                                         id="image_3"
                                         v-model="form.image_3"
-                                        :url="image_3_url"
+                                        :object-value="image_3"
                                     />
                                     <jet-label for="image_3" value="Image 3" class="mt-1 text-center" />
                                 </div>
@@ -112,13 +112,6 @@
                         <!-- Price -->
                         <div class="col-span-6 sm:col-span-4">
                             <jet-label for="price" value="Price" />
-                            <!-- <jet-input
-                                id="price"
-                                type="number"
-                                class="mt-1 block w-full"
-                                v-model="form.price"
-                                autocomplete="price"
-                            /> -->
                             <div class="mt-1 flex rounded-md shadow-sm">
                                 <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
                                     &#8369;
@@ -226,9 +219,8 @@ export default {
         },
         product: {
             type: Object,
-            required: true
         },
-        cover_image_url: {
+        cover_image: {
             type: Object
         },
         images: {
@@ -271,16 +263,16 @@ export default {
     },
 
     computed: {
-        image_1_url() {
-            return this.images[0] ? this.images[0].url : null
+        image_1() {
+            return this.images ? this.images[0] : null
         },
 
-        image_2_url() {
-            return this.images[1] ? this.images[1].url : null
+        image_2() {
+            return this.images ? this.images[1] : null
         },
 
-        image_3_url() {
-            return this.images[2] ? this.images[2].url : null
+        image_3() {
+            return this.images ? this.images[2] :null
         },
     }
 };

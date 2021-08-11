@@ -2,7 +2,7 @@
     <div class="relative">
 
         <!-- Remove Button -->
-        <button type="button" class="w-5 h-5 absolute right-1 top-1 rounded-full bg-red-500 text-white hover:bg-red-600 flex items-center justify-center transform hover:scale-105 transition duration-500 ease-in-out" title="Remove" v-if="url || photoPreview" @click="clearPhotoFileInput">
+        <button type="button" class="w-5 h-5 absolute right-1 top-1 rounded-full bg-red-500 text-white hover:bg-red-600 flex items-center justify-center transform hover:scale-105 transition duration-500 ease-in-out" title="Remove" v-if="getUrl || photoPreview" @click="clearPhotoFileInput">
             <svg
                 style="width:20px;height:20px"
                 viewBox="0 0 24 24"
@@ -13,7 +13,7 @@
         </button>
 
         <div
-            class="h-20 w-20 flex items-center justify-center cursor-pointer hover:bg-gray-100" :class="{ 'border border-purple-400 border-dashed': !photoPreview && !url }"
+            class="h-20 w-20 flex items-center justify-center cursor-pointer hover:bg-gray-100" :class="{ 'border border-purple-400 border-dashed': !photoPreview && !getUrl }"
             @click="selectNewPhoto"
         >
             <input
@@ -28,13 +28,13 @@
             <!-- Current Profile Photo -->
             <div v-show="! photoPreview" class="">
                 <img
-                    v-if="url"
-                    :src="url"
+                    v-if="getUrl"
                     alt="image"
+                    :src="getUrl"
                     class="h-20 w-20 object-cover border"
                 />
                 <svg
-                    v-if="!url"
+                    v-if="!getUrl"
                     style="width:24px;height:24px"
                     viewBox="0 0 24 24"
                     class="text-purple-400"
@@ -60,17 +60,16 @@
                 type: null,
                 default: null,
             },
-            url: {
-                type: String,
+            objectValue: {
+                type: Object,
                 default: null
             }
         },
 
-        // emits: ['update:modelValue'],
-
         data () {
             return {
                 photoPreview: null,
+                showLoadedImage: true
             }
         },
 
@@ -99,10 +98,24 @@
 
             clearPhotoFileInput() {
                 if (this.$refs.photo?.value) {
+
                     this.photoPreview = null;
+
                     this.$emit('update:modelValue', null)
                 }
+
+                this.showLoadedImage = false
             },
+        },
+
+        computed: {
+            getUrl () {
+                if (this.showLoadedImage) {
+                    return this.objectValue ? this.objectValue.url : null
+                } else {
+                    return null
+                }
+            }
         }
     }
 </script>
