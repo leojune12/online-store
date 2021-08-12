@@ -25,8 +25,8 @@
                                 <div class="col-span-6 sm:col-span-4">
                                     <image-input
                                         id="cover_image"
-                                        v-model="form.cover_image"
-                                        :object-value="cover_image"
+                                        v-model:model-image="form.cover_image"
+                                        v-model:model-default-image="cover_image"
                                     />
                                     <jet-label for="cover_image" value="Cover Image" class="mt-1 text-center" />
                                 </div>
@@ -35,8 +35,8 @@
                                 <div class="col-span-6 sm:col-span-4">
                                     <image-input
                                         id="image_1"
-                                        v-model="form.image_1"
-                                        :object-value="image_1"
+                                        v-model:model-image="form.image_1"
+                                        v-model:model-default-image="image_1"
                                     />
                                     <jet-label for="image_1" value="Image 1" class="mt-1 text-center" />
                                 </div>
@@ -45,8 +45,8 @@
                                 <div class="col-span-6 sm:col-span-4">
                                     <image-input
                                         id="image_2"
-                                        v-model="form.image_2"
-                                        :object-value="image_2"
+                                        v-model:model-image="form.image_2"
+                                        v-model:model-default-image="image_2"
                                     />
                                     <jet-label for="image_2" value="Image 2" class="mt-1 text-center" />
                                 </div>
@@ -55,8 +55,8 @@
                                 <div class="col-span-6 sm:col-span-4">
                                     <image-input
                                         id="image_3"
-                                        v-model="form.image_3"
-                                        :object-value="image_3"
+                                        v-model:model-image="form.image_3"
+                                        v-model:model-default-image="image_3"
                                     />
                                     <jet-label for="image_3" value="Image 3" class="mt-1 text-center" />
                                 </div>
@@ -223,9 +223,18 @@ export default {
         cover_image: {
             type: Object
         },
-        images: {
-            type: Object
-        }
+        image_1: {
+            type: Object,
+            default: null
+        },
+        image_2: {
+            type: Object,
+            default: null
+        },
+        image_3: {
+            type: Object,
+            default: null
+        },
     },
 
     data() {
@@ -261,20 +270,6 @@ export default {
 			}
 		},
     },
-
-    computed: {
-        image_1() {
-            return this.images ? this.images[0] : null
-        },
-
-        image_2() {
-            return this.images ? this.images[1] : null
-        },
-
-        image_3() {
-            return this.images ? this.images[2] :null
-        },
-    }
 };
 </script>
 

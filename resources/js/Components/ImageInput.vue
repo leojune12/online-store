@@ -20,7 +20,7 @@
                 type="file"
                 accept="image/*"
                 class="hidden"
-                @input="$emit('update:modelValue', $refs.photo.files[0])"
+                @input="$emit('update:modelImage', $refs.photo.files[0])"
                 ref="photo"
                 @change="updatePhotoPreview"
             >
@@ -56,15 +56,20 @@
 <script>
     export default {
         props: {
-            modelValue: {
+            modelImage: {
                 type: null,
                 default: null,
             },
-            objectValue: {
+            modelDefaultImage: {
                 type: Object,
                 default: null
             }
         },
+
+        emits: [
+            'update:modelImage',
+            'update:modelDefaultImage',
+        ],
 
         data () {
             return {
@@ -101,7 +106,7 @@
 
                     this.photoPreview = null;
 
-                    this.$emit('update:modelValue', null)
+                    this.$emit('update:modelImage', null)
                 }
 
                 this.showLoadedImage = false
@@ -111,7 +116,7 @@
         computed: {
             getUrl () {
                 if (this.showLoadedImage) {
-                    return this.objectValue ? this.objectValue.url : null
+                    return this.modelDefaultImage ? this.modelDefaultImage.url : null
                 } else {
                     return null
                 }

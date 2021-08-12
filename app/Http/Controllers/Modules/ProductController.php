@@ -162,17 +162,17 @@ class ProductController extends Controller
             $cover_image['id'] = $cover_image_media->id;
             $cover_image['url'] = $cover_image_media->getUrl();
 
-            // dd($cover_image);
-
             $mediaItems = $product->getMedia('product_images');
-            $images = [];
+            $image_1 = null;
+            $image_2 = null;
+            $image_3 = null;
 
-            foreach ($mediaItems as $item) {
+            foreach ($mediaItems as $key => $item) {
 
-                array_push($images, [
+                ${'image_' . ($key + 1)} = [
                     'id' => $item->id,
                     'url' => $item->getUrl()
-                ]);
+                ];
             };
 
             $categories = Category::get(['id', 'name']);
@@ -182,7 +182,9 @@ class ProductController extends Controller
                 'categories' => $categories,
                 'product' => $product,
                 'cover_image' => $cover_image,
-                'images' => $images
+                'image_1' => $image_1,
+                'image_2' => $image_2,
+                'image_3' => $image_3,
             ]);
         } else {
 
