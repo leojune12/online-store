@@ -100,6 +100,13 @@
                 };
 
                 reader.readAsDataURL(photo);
+
+                if (this.showLoadedImage) {
+
+                    this.showLoadedImage = false
+
+                    this.$emit('update:imageId', this.getModelId)
+                }
             },
 
             clearPhotoFileInput() {

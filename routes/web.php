@@ -27,12 +27,14 @@ Route::middleware(['is_active', 'auth:sanctum', 'verified'])->group(function () 
 
     Route::resource('shop', ShopController::class);
 
-    Route::prefix('/shop')->group(function () {
-        Route::post('/update-info/{shop}', [ShopController::class, 'updateShop'])->name('shop.update-info');
-        Route::delete('/delete-cover-photo/{shop}', [ShopController::class, 'deleteCoverPhoto'])->name('shop.delete-cover-photo');
+    Route::prefix('shop')->group(function () {
+        Route::post('update-info/{shop}', [ShopController::class, 'updateShop'])->name('shop.update-info');
+        Route::delete('delete-cover-photo/{shop}', [ShopController::class, 'deleteCoverPhoto'])->name('shop.delete-cover-photo');
     });
 
     Route::resource('products', ProductController::class);
+
+    Route::post('update-product', [ProductController::class, 'updateProduct'])->name('products.update-product');
 
     Route::middleware(['role:Superadmin|Admin'])->group(function () {
 

@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -98,18 +99,18 @@ class ProductController extends Controller
 
             if ($request->cover_image) {
                 $product->addMediaFromRequest('cover_image')->toMediaCollection('product_cover_image');
+            }
 
-                if ($request->image_1) {
-                    $product->addMediaFromRequest('image_1')->toMediaCollection('product_images');
-                }
+            if ($request->image_1) {
+                $product->addMediaFromRequest('image_1')->toMediaCollection('product_images');
+            }
 
-                if ($request->image_2) {
-                    $product->addMediaFromRequest('image_2')->toMediaCollection('product_images');
-                }
+            if ($request->image_2) {
+                $product->addMediaFromRequest('image_2')->toMediaCollection('product_images');
+            }
 
-                if ($request->image_3) {
-                    $product->addMediaFromRequest('image_3')->toMediaCollection('product_images');
-                }
+            if ($request->image_3) {
+                $product->addMediaFromRequest('image_3')->toMediaCollection('product_images');
             }
 
             DB::commit();
@@ -158,7 +159,6 @@ class ProductController extends Controller
         if ($shop) {
 
             $cover_image_media = $product->getFirstMedia('product_cover_image');
-
             $cover_image['id'] = $cover_image_media->id;
             $cover_image['url'] = $cover_image_media->getUrl();
 
@@ -178,7 +178,7 @@ class ProductController extends Controller
             $categories = Category::get(['id', 'name']);
 
             return inertia('Product/FormProduct', [
-                'title' => 'Create',
+                'title' => 'Update',
                 'categories' => $categories,
                 'product' => $product,
                 'cover_image' => $cover_image,
@@ -216,5 +216,75 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+
+    public function updateProduct(Request $request, Product $product)
+    {
+        dd($request->all());
+        Validator::make($request->all(), [
+            'category' => ['required'],
+            'name' => ['required', 'string', 'min:20', 'max:255', Rule::unique('products')->ignore($product->id)],
+            'description' => ['required', 'string', 'min:20', 'max:500'],
+            'price' => ['required', 'numeric', 'min:1'],
+            'stock' => ['required', 'numeric', 'min:0'],
+            'condition' => [],
+            'publish' => [],
+            'cover_image' => ['required', 'image', 'max:1024'],
+            'image_1' => ['nullable', 'image', 'max:1024'],
+            'image_2' => ['nullable', 'image', 'max:1024'],
+            'image_3' => ['nullable', 'image', 'max:1024'],
+        ])->validateWithBag('submitProduct');
+
+        DB::beginTransaction();
+
+        try {
+
+            $shop = Auth::user()->shop;
+
+            $product = Product::create([
+                'shop_id' => $shop->id,
+                'category_id' => $request->category,
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'description' => $request->description,
+                'price' => $request->price,
+                'stock' => $request->stock,
+                'condition' => $request->condition,
+                'publish' => 1,
+            ]);
+
+            if ($request->cover_image) {
+                $product->addMediaFromRequest('cover_image')->toMediaCollection('product_cover_image');
+            }
+
+            if ($request->image_1) {
+                $product->addMediaFromRequest('image_1')->toMediaCollection('product_images');
+            }
+
+            if ($request->image_2) {
+                $product->addMediaFromRequest('image_2')->toMediaCollection('product_images');
+            }
+
+            if ($request->image_3) {
+                $product->addMediaFromRequest('image_3')->toMediaCollection('product_images');
+            }
+
+            DB::commit();
+
+            return redirect(route('products.index'))->with('alert', [
+                'status' => 'success',
+                'message' => 'Product created successfully!'
+            ]);
+        } catch (Throwable $e) {
+
+            dd($e);
+
+            DB::rollBack();
+
+            return back()->with('alert', [
+                'status' => 'error',
+                'message' => 'Whoops! Something went wrong. Please try again.',
+            ]);
+        }
     }
 }
