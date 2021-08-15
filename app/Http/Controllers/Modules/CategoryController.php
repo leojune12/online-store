@@ -108,7 +108,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255', Rule::unique('categories')->ignore($category->id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('categories')->ignore($category)],
         ])->validateWithBag('submitCategory');
 
         try {
