@@ -54,4 +54,29 @@ class ProductFactory extends Factory
             'view_count' => $this->faker->numberBetween(0, 500),
         ];
     }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterMaking(function (Product $product) {
+            //
+        })->afterCreating(function (Product $product) {
+
+            $url = 'https://picsum.photos/200';
+
+            $product
+            ->addMediaFromUrl($url)
+            ->toMediaCollection('product_cover_image');
+
+            $url = 'https://picsum.photos/200';
+
+            $product
+            ->addMediaFromUrl($url)
+            ->toMediaCollection('product_images');
+        });
+    }
 }
