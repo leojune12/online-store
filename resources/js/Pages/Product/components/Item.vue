@@ -4,7 +4,7 @@
 			<img
 				alt="ecommerce"
 				class="object-cover object-center w-full h-full block"
-				src="https://picsum.photos/200"
+				:src="item?.cover_image_url"
 			/>
 		</div>
 		<div class="mt-4 flex flex-col p-2">
