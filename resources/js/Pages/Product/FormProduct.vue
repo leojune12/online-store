@@ -161,7 +161,7 @@
                         </jet-action-message>
 
                         <inertia-link
-							:href="route('categories.index')"
+							:href="route('products.index')"
 							class="mr-2"
 							:class="{ 'opacity-25': form.processing }"
 							:disabled="form.processing"
