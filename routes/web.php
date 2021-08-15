@@ -34,7 +34,7 @@ Route::middleware(['is_active', 'auth:sanctum', 'verified'])->group(function () 
 
     Route::resource('products', ProductController::class);
 
-    Route::post('update-product', [ProductController::class, 'updateProduct'])->name('products.update-product');
+    Route::post('update-product/{product}', [ProductController::class, 'updateProduct'])->name('products.update-product');
 
     Route::middleware(['role:Superadmin|Admin'])->group(function () {
 

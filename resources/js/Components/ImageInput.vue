@@ -2,7 +2,7 @@
     <div class="relative">
 
         <!-- Remove Button -->
-        <button type="button" class="w-5 h-5 absolute right-1 top-1 rounded-full bg-red-500 text-white hover:bg-red-600 flex items-center justify-center transform hover:scale-105 transition duration-500 ease-in-out" title="Remove" v-if="!!getModelUrl || !!photoPreview" @click="clearPhotoFileInput">
+        <button type="button" class="w-5 h-5 absolute right-1 top-1 rounded-full bg-red-500 text-white hover:bg-red-600 flex items-center justify-center transform hover:scale-105 transition duration-500 ease-in-out" title="Remove" v-if="!!defaultModelUrl || !!photoPreview" @click="clearPhotoFileInput">
             <svg
                 style="width:20px;height:20px"
                 viewBox="0 0 24 24"
@@ -13,7 +13,7 @@
         </button>
 
         <div
-            class="h-20 w-20 flex items-center justify-center cursor-pointer hover:bg-gray-100" :class="{ 'border border-purple-400 border-dashed': !photoPreview && !getModelUrl }"
+            class="h-20 w-20 flex items-center justify-center cursor-pointer hover:bg-gray-100" :class="{ 'border border-purple-400 border-dashed': !photoPreview && !defaultModelUrl }"
             @click="selectNewPhoto"
         >
             <input
@@ -28,13 +28,13 @@
             <!-- Current Profile Photo -->
             <div v-show="!photoPreview">
                 <img
-                    v-if="getModelUrl"
+                    v-if="defaultModelUrl"
                     alt="image"
-                    :src="getModelUrl"
+                    :src="defaultModelUrl"
                     class="h-20 w-20 object-cover border"
                 />
                 <svg
-                    v-if="!getModelUrl"
+                    v-if="!defaultModelUrl"
                     style="width:24px;height:24px"
                     viewBox="0 0 24 24"
                     class="text-purple-400"
@@ -62,14 +62,18 @@
             },
             modelDefaultImage: {
                 type: Object,
-                default: null
+                default: null,
             },
+            modelId: {
+                type: null,
+                default: null
+            }
         },
 
         emits: [
             'update:modelImage',
             'update:modelDefaultImage',
-            'update:imageId',
+            'update:modelId',
         ],
 
         data () {
@@ -105,7 +109,7 @@
 
                     this.showLoadedImage = false
 
-                    this.$emit('update:imageId', this.getModelId)
+                    this.$emit('update:modelId', this.defaultModelId)
                 }
             },
 
@@ -121,19 +125,19 @@
 
                     this.showLoadedImage = false
 
-                    this.$emit('update:imageId', this.getModelId)
+                    this.$emit('update:modelId', this.defaultModelId)
                 }
             },
         },
 
         computed: {
-            getModelUrl () {
+            defaultModelUrl () {
                 return this.showLoadedImage ? this.modelDefaultImage?.url ?? null : null
             },
 
-            getModelId () {
+            defaultModelId () {
                 return this.modelDefaultImage?.id ?? null
-            }
+            },
         }
     }
 </script>

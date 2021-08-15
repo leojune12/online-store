@@ -29,7 +29,7 @@ class Shop extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this
-            ->addMediaCollection('cover_photos')
+            ->addMediaCollection('shop_cover_photos')
             ->singleFile();
     }
 }

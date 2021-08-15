@@ -158,22 +158,25 @@ class ProductController extends Controller
 
         if ($shop) {
 
-            $cover_image_media = $product->getFirstMedia('product_cover_image');
-            $cover_image['id'] = $cover_image_media->id;
-            $cover_image['url'] = $cover_image_media->getUrl();
+            $product_cover_image = $product->getFirstMedia('product_cover_image');
+
+            if ($product_cover_image) {
+                $cover_image['id'] = $product_cover_image->id;
+                $cover_image['url'] = $product_cover_image->getUrl();
+            }
 
             $mediaItems = $product->getMedia('product_images');
-            $image_1 = null;
-            $image_2 = null;
-            $image_3 = null;
 
-            foreach ($mediaItems as $key => $item) {
+            if (count($mediaItems)) {
 
-                ${'image_' . ($key + 1)} = [
-                    'id' => $item->id,
-                    'url' => $item->getUrl()
-                ];
-            };
+                foreach ($mediaItems as $key => $item) {
+
+                    ${'image_' . ($key + 1)} = [
+                        'id' => $item->id,
+                        'url' => $item->getUrl()
+                    ];
+                };
+            }
 
             $categories = Category::get(['id', 'name']);
 
@@ -181,10 +184,10 @@ class ProductController extends Controller
                 'title' => 'Update',
                 'categories' => $categories,
                 'product' => $product,
-                'cover_image' => $cover_image,
-                'image_1' => $image_1,
-                'image_2' => $image_2,
-                'image_3' => $image_3,
+                'cover_image' => isset($cover_image) ? $cover_image : null,
+                'image_1' => isset($image_1) ? $image_1 : null,
+                'image_2' => isset($image_2) ? $image_2 : null,
+                'image_3' => isset($image_3) ? $image_3 : null,
             ]);
         } else {
 
@@ -220,19 +223,22 @@ class ProductController extends Controller
 
     public function updateProduct(Request $request, Product $product)
     {
-        dd($request->all());
         Validator::make($request->all(), [
             'category' => ['required'],
-            'name' => ['required', 'string', 'min:20', 'max:255', Rule::unique('products')->ignore($product->id)],
+            'name' => ['required', 'string', 'min:20', 'max:255', Rule::unique('products')->ignore($product)],
             'description' => ['required', 'string', 'min:20', 'max:500'],
             'price' => ['required', 'numeric', 'min:1'],
             'stock' => ['required', 'numeric', 'min:0'],
-            'condition' => [],
-            'publish' => [],
-            'cover_image' => ['required', 'image', 'max:1024'],
+            'condition' => ['nullable', 'numeric'],
+            'publish' => ['nullable', 'numeric'],
+            'cover_image' => ['exclude_if:cover_image_id,null', 'required', 'image', 'max:1024'],
             'image_1' => ['nullable', 'image', 'max:1024'],
             'image_2' => ['nullable', 'image', 'max:1024'],
             'image_3' => ['nullable', 'image', 'max:1024'],
+            'cover_image_id' => ['nullable', 'string'],
+            'image_1_id' => ['nullable', 'numeric'],
+            'image_2_id' => ['nullable', 'numeric'],
+            'image_3_id' => ['nullable', 'numeric'],
         ])->validateWithBag('submitProduct');
 
         DB::beginTransaction();
@@ -241,7 +247,7 @@ class ProductController extends Controller
 
             $shop = Auth::user()->shop;
 
-            $product = Product::create([
+            $product->update([
                 'shop_id' => $shop->id,
                 'category_id' => $request->category,
                 'name' => $request->name,
@@ -269,11 +275,43 @@ class ProductController extends Controller
                 $product->addMediaFromRequest('image_3')->toMediaCollection('product_images');
             }
 
+            if ($request->cover_image_id) {
+                $productMedia = $product
+                    ->getMedia('product_cover_image')
+                    ->where('id', $request->cover_image_id)
+                    ->first();
+
+                if ($productMedia) {
+                    $productMedia->delete();
+                }
+            }
+
+            $deleteMediaIds = [
+                $request->image_1_id,
+                $request->image_2_id,
+                $request->image_3_id,
+            ];
+
+            if (count(array_filter($deleteMediaIds))) {
+
+                foreach (array_filter($deleteMediaIds) as $id) {
+
+                    $productMedia = $product
+                        ->getMedia('product_images')
+                        ->where('id', $id)
+                        ->first();
+
+                    if ($productMedia) {
+                        $productMedia->delete();
+                    }
+                }
+            }
+
             DB::commit();
 
             return redirect(route('products.index'))->with('alert', [
                 'status' => 'success',
-                'message' => 'Product created successfully!'
+                'message' => 'Product updated successfully!'
             ]);
         } catch (Throwable $e) {
 

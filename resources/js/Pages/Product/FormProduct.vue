@@ -27,7 +27,7 @@
                                         id="cover_image"
                                         v-model:model-image="form.cover_image"
                                         v-model:model-default-image="cover_image"
-                                        v-model:image-id="form.cover_image_id"
+                                        v-model:model-id="form.cover_image_id"
                                     />
                                     <jet-label for="cover_image" value="Cover Image" class="mt-1 text-center" />
                                 </div>
@@ -38,7 +38,7 @@
                                         id="image_1"
                                         v-model:model-image="form.image_1"
                                         v-model:model-default-image="image_1"
-                                        v-model:image-id="form.image_1_id"
+                                        v-model:model-id="form.image_1_id"
                                     />
                                     <jet-label for="image_1" value="Image 1" class="mt-1 text-center" />
                                 </div>
@@ -49,7 +49,7 @@
                                         id="image_2"
                                         v-model:model-image="form.image_2"
                                         v-model:model-default-image="image_2"
-                                        v-model:image-id="form.image_2_id"
+                                        v-model:model-id="form.image_2_id"
                                     />
                                     <jet-label for="image_2" value="Image 2" class="mt-1 text-center" />
                                 </div>
@@ -60,7 +60,7 @@
                                         id="image_3"
                                         v-model:model-image="form.image_3"
                                         v-model:model-default-image="image_3"
-                                        v-model:image-id="form.image_3_id"
+                                        v-model:model-id="form.image_3_id"
                                     />
                                     <jet-label for="image_3" value="Image 3" class="mt-1 text-center" />
                                 </div>
@@ -272,7 +272,7 @@ export default {
 					preserveScroll: true,
 				});
 			} else {
-				this.form.post(route("products.update-product", this.product.slug), {
+				this.form.post(route("products.update-product", this.product?.slug), {
 					errorBag: "submitProduct",
 					preserveScroll: true,
 				});

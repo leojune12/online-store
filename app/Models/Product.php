@@ -36,4 +36,11 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsTo(Shop::class);
     }
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('product_cover_image')
+            ->singleFile();
+    }
 }
