@@ -25,6 +25,7 @@ class CreateProductsTable extends Migration
             $table->boolean('condition')->default(true);
             $table->boolean('publish')->default(true);
             $table->integer('view_count')->default(0);
+            $table->text('cover_image_url')->nullable();
             $table->timestamps();
         });
     }
