@@ -144,9 +144,22 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        $cover_image = $product->getFirstMediaUrl('product_cover_image');
+
+        $product_images = [];
+
+        array_push($product_images, $cover_image);
+
+        foreach ($product->getMedia('product_images') as $media) {
+            array_push($product_images, $media->getUrl());
+        }
+
+        // dd($product_images);
+
         return inertia('Product/ShowItem', [
             'product' => $product,
-            'categories' => $product->category
+            'categories' => $product->category,
+            'product_images' => $product_images
         ]);
     }
 
