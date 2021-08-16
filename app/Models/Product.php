@@ -43,13 +43,4 @@ class Product extends Model implements HasMedia
             ->addMediaCollection('product_cover_image')
             ->singleFile();
     }
-
-    protected $appends = [
-        'cover_image_url',
-    ];
-
-    public function getCoverImageUrlAttribute()
-    {
-        return $this->getFirstMediaUrl('product_cover_image');
-    }
 }

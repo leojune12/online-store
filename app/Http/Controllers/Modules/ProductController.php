@@ -99,6 +99,10 @@ class ProductController extends Controller
 
             if ($request->cover_image) {
                 $product->addMediaFromRequest('cover_image')->toMediaCollection('product_cover_image');
+
+                $product->cover_image_url = $product->getFirstMediaUrl('product_cover_image');
+
+                $product->save();
             }
 
             if ($request->image_1) {
@@ -261,6 +265,10 @@ class ProductController extends Controller
 
             if ($request->cover_image) {
                 $product->addMediaFromRequest('cover_image')->toMediaCollection('product_cover_image');
+
+                $product->cover_image_url = $product->getFirstMediaUrl('product_cover_image');
+
+                $product->save();
             }
 
             if ($request->image_1) {

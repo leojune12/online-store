@@ -3,9 +3,10 @@
 		<div class="container px-5 py-24 mx-auto">
 			<div class="lg:w-4/5 mx-auto flex flex-wrap">
 				<img
-				alt="ecommerce"
-				class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
-				src="https://picsum.photos/200"
+					alt="ecommerce"
+					class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
+					:src="imageUrl"
+					@error="imageBroken = !imageBroken"
 				/>
 				<div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
 				<h2 class="text-sm title-font text-gray-500 tracking-widest">
@@ -180,7 +181,7 @@
 				<div class="flex">
 					<span class="title-font font-medium text-2xl text-orange-500"
 					>
-						&#8369;{{ getPrice(product.price) }}
+						&#8369;{{ price }}
 					</span>
 					<button
 					class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
@@ -219,10 +220,20 @@ export default {
 		}
 	},
 
-	methods: {
-		getPrice (price) {
+	data () {
+		return {
+			imageBroken: false
+		}
+	},
 
-			return new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(price)
+	computed: {
+		price () {
+
+			return new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(this.product.price)
+		},
+
+		imageUrl () {
+			return !this.imageBroken ? this.product?.cover_image_url : 'https://ui-avatars.com/api/?name=' + this.product.name + '&color=7F9CF5&background=EBF4FF'
 		}
 	}
 };

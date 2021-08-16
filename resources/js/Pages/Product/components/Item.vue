@@ -4,7 +4,8 @@
 			<img
 				alt="ecommerce"
 				class="object-cover object-center w-full h-full block"
-				:src="item?.cover_image_url"
+				:src="imageUrl"
+				@error="imageBroken = !imageBroken"
 			/>
 		</div>
 		<div class="mt-4 flex flex-col p-2">
@@ -17,7 +18,7 @@
 				</h2>
 			</div>
 			<p class="mt-1 text-orange-500">
-				&#8369;{{ getPrice(item.price) }}
+				&#8369;{{ price }}
 			</p>
 		</div>
 	</inertia-link>
@@ -32,12 +33,22 @@ export default {
 		}
 	},
 
-	methods: {
-		getPrice (price) {
-
-			return new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(price)
+	data () {
+		return {
+			imageBroken: false
 		}
 	},
+
+	computed: {
+		price () {
+
+			return new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(this.item.price)
+		},
+
+		imageUrl () {
+			return !this.imageBroken ? this.item?.cover_image_url : 'https://ui-avatars.com/api/?name=' + this.item.name + '&color=7F9CF5&background=EBF4FF'
+		}
+	}
 };
 
 </script>
