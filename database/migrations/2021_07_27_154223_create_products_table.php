@@ -15,9 +15,9 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->integer('shop_id')->nullable();
-            $table->integer('category_id')->nullable();
-            $table->string('name')->unique();
+            $table->foreignId('shop_id')->constrained();
+            $table->foreignId('category_id')->constrained();
+            $table->string('name');
             $table->string('slug');
             $table->text('description');
             $table->decimal('price', 10, 2)->default(0);
@@ -27,6 +27,8 @@ class CreateProductsTable extends Migration
             $table->integer('view_count')->default(0);
             $table->text('cover_image_url')->nullable();
             $table->timestamps();
+
+            $table->index(['name', 'slug', 'price']);
         });
     }
 

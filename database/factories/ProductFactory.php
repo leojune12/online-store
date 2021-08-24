@@ -72,6 +72,22 @@ class ProductFactory extends Factory
             ->addMediaFromUrl($url)
             ->toMediaCollection('product_cover_image');
 
+            $product->cover_image_url = $product->getFirstMediaUrl('product_cover_image');
+
+            $product->save();
+
+            $url = 'https://picsum.photos/200';
+
+            $product
+            ->addMediaFromUrl($url)
+            ->toMediaCollection('product_images');
+
+            $url = 'https://picsum.photos/200';
+
+            $product
+            ->addMediaFromUrl($url)
+            ->toMediaCollection('product_images');
+
             $url = 'https://picsum.photos/200';
 
             $product
