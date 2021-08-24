@@ -15,10 +15,12 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->foreignId('user_id')->constrained();
             $table->string('transaction_id');
             $table->decimal('total', 10, 2)->default(0);
             $table->timestamps();
+
+            $table->index(['user_id', 'transaction_id', 'total']);
         });
     }
 

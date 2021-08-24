@@ -18,6 +18,8 @@ class CreateCategoryProductTable extends Migration
             $table->integer('category_id');
             $table->integer('product_id');
             $table->timestamps();
+
+            $table->index(['category_id', 'product_id']);
         });
     }
 
